@@ -12,7 +12,8 @@ public class PlayerMovement : MonoBehaviour
     public float jumpCoolDown;
     public float airMultipiler;
     bool readyToJump;
-
+    [Header("KeyBinds")]
+    public KeyCode jumpKey = KeyCode.Space;
     [Header("GroundCheck")]
     public float playerHeight;
     public LayerMask whatIsGround;
@@ -32,6 +33,13 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        if(Input.GetKeyDown(jumpKey) && readyToJump && grounded)
+        {
+            readyToJump = false;
+            Jump();
+
+        }
+
     }
 
     private void MovePlayer()
@@ -39,7 +47,12 @@ public class PlayerMovement : MonoBehaviour
         //calculate movement Direction
         moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        rb.AddForce(moveDir.normalized * moveSpeed * 10f,ForceMode.Force);
+        if (!grounded) rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMultipiler, ForceMode.Force);
+
+        else
+        rb.AddForce(moveDir.normalized * moveSpeed * 10f, ForceMode.Force);
+        
+        
     }
 
     private void SpeedLimit()
@@ -53,6 +66,19 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector3(limitedVel.x, limitedVel.y, limitedVel.z);
         }
     }
+
+    private void Jump()
+    {
+        //reset y vel
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+    private void ResetJump()
+    {
+        readyToJump = true;
+    }
+
 
     // Start is called before the first frame update
     void Start() 
@@ -69,8 +95,11 @@ public class PlayerMovement : MonoBehaviour
 
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
-        if (!grounded) rb.drag = 0;
+        if (!grounded)rb.drag = 0;
+
         else rb.drag = groundDrag;
+         
+        
 
     }
     private void FixedUpdate()
