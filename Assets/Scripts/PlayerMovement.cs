@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public Animator animator;
+
     public float moveSpeed;
 
     public float groundDrag;
 
+    [Header("Jump")]
     public float jumpForce;
     public float jumpCoolDown;
     public float airMultipiler;
-    bool readyToJump;
+    bool readyToJump = true;
+
     [Header("KeyBinds")]
     public KeyCode jumpKey = KeyCode.Space;
+
     [Header("GroundCheck")]
     public float playerHeight;
     public LayerMask whatIsGround;
@@ -33,10 +38,14 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if(Input.GetKeyDown(jumpKey) && readyToJump && grounded)
+        //Jump
+        if(Input.GetKey(jumpKey) && readyToJump && grounded)
         {
+            animator.SetBool("Jump", true);
+            Invoke(nameof(Jump), 0.25f);
             readyToJump = false;
-            Jump();
+        
+            Invoke(nameof(ResetJump), jumpCoolDown);
 
         }
 
@@ -47,12 +56,15 @@ public class PlayerMovement : MonoBehaviour
         //calculate movement Direction
         moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if (!grounded) rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMultipiler, ForceMode.Force);
+        
 
-        else
-        rb.AddForce(moveDir.normalized * moveSpeed * 10f, ForceMode.Force);
-        
-        
+        if (grounded) rb.AddForce(moveDir.normalized * moveSpeed * 10f, ForceMode.Force); 
+
+        else if(!grounded) rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMultipiler, ForceMode.Force);
+
+        //Calculate forward dirction vector
+        animator.SetFloat("Speed", rb.velocity.magnitude);
+
     }
 
     private void SpeedLimit()
@@ -73,17 +85,22 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        
     }
     private void ResetJump()
     {
         readyToJump = true;
+        animator.SetBool("Jump", false);
+
     }
 
 
     // Start is called before the first frame update
     void Start() 
     {
+        //animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
+        
         rb.freezeRotation = true;
     }
 
@@ -94,12 +111,14 @@ public class PlayerMovement : MonoBehaviour
         SpeedLimit();
 
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
-
-        if (!grounded)rb.drag = 0;
-
-        else rb.drag = groundDrag;
-         
+        animator.SetBool("OnGround", grounded);
         
+
+        if (grounded) rb.drag = groundDrag; 
+
+        else rb.drag = 0;
+
+
 
     }
     private void FixedUpdate()

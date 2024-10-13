@@ -1,29 +1,9 @@
 fileFormatVersion: 2
-guid: eb2374a1494722b4884190290a1de2e4
+guid: 6a193c2db4534364d8083716b4ffd0d8
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Arissa_MAT
-    second: {fileID: 2100000, guid: e3a2ee9c38eba814bbf33e88ad489ba5, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Arissa_DIFF_diffuse
-    second: {fileID: 2800000, guid: e33cf2f751016034084d1317c1423d4a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Arissa_NM_normal
-    second: {fileID: 2800000, guid: b8f6f3f271d55f648a5a5dda7403454a, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: Arissa_SPEC_specular
-    second: {fileID: 2800000, guid: 89635d4bd754d4c4f85679c5f38a8158, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
