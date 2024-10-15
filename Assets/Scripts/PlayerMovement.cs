@@ -6,9 +6,11 @@ public class PlayerMovement : MonoBehaviour
 {
     public Animator animator;
 
+    [Header("Movment")]
     public float moveSpeed;
-
     public float groundDrag;
+
+    private float currentSpeed;
 
     [Header("Jump")]
     public float jumpForce;
@@ -33,6 +35,44 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
 
+    public enum StateMove
+    {
+        FREEZE,
+        RUNNING,
+        UNLIMITED,
+        AIR
+    }
+
+
+    public bool freeze;
+    public bool unlimited;
+
+    public bool restricted;
+
+    StateMove currentState;
+
+    private void StateHandler()
+    {
+
+        if (freeze)
+        {
+            currentState = StateMove.FREEZE;
+            rb.velocity = Vector3.zero;
+
+        }
+        else if (unlimited)
+        {
+            currentState = StateMove.UNLIMITED;
+            moveSpeed = 999f;
+            return;
+        }
+        else if (grounded)
+        {
+           currentState = StateMove.RUNNING;
+            currentSpeed = moveSpeed;
+        }
+    }
+
     private void MyInput() 
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -54,13 +94,14 @@ public class PlayerMovement : MonoBehaviour
     private void MovePlayer()
     {
         //calculate movement Direction
+        if (restricted) return;
         moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         
 
-        if (grounded) rb.AddForce(moveDir.normalized * moveSpeed * 10f, ForceMode.Force); 
+        if (grounded) rb.AddForce(moveDir.normalized * currentSpeed * 10f, ForceMode.Force); 
 
-        else if(!grounded) rb.AddForce(moveDir.normalized * moveSpeed * 10f * airMultipiler, ForceMode.Force);
+        else if(!grounded) rb.AddForce(moveDir.normalized * currentSpeed * 10f * airMultipiler, ForceMode.Force);
 
         //Calculate forward dirction vector
         animator.SetFloat("Speed", rb.velocity.magnitude);
@@ -109,6 +150,7 @@ public class PlayerMovement : MonoBehaviour
     {
         MyInput();
         SpeedLimit();
+        StateHandler();
 
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         animator.SetBool("OnGround", grounded);

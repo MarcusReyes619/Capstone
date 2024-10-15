@@ -9,7 +9,7 @@ public class LedgeGrabbing : MonoBehaviour
     public PlayerMovement pm;
     public Transform orientation;
     public Transform cam;
-    private Rigidbody rb;
+    public Rigidbody rb;
 
     [Header("Ledge Grabbing")]
     public float moveToLedgeSpeed;
@@ -36,11 +36,11 @@ public class LedgeGrabbing : MonoBehaviour
         if (!ledgeDetected) return;
 
         float distanceToLedge = Vector3.Distance(transform.position, ledgeHit.transform.position);
-
+       
 
         if (ledgeHit.transform == lastLedge) return;
 
-        if (distanceToLedge < maxLedgeGrabRange && !holding) EnterLedgeHold();
+        if (distanceToLedge < maxLedgeGrabRange && !holding)  EnterLedgeHold();  
     }
 
     private void SubStateMachine()
@@ -61,15 +61,21 @@ public class LedgeGrabbing : MonoBehaviour
     {
         holding = true;
 
+        pm.unlimited = true;
+        pm.restricted = true;
+
+
         currentLedge = ledgeHit.transform;
         lastLedge = ledgeHit.transform;
 
         rb.useGravity = false;
         rb.velocity = Vector3.zero;
+        
     }
 
-    public void FreezeRigidbodyOnLedge()
+    private void FreezeRigidbodyOnLedge()
     {
+        Debug.Log("WORKY");
         rb.useGravity = false;
 
         Vector3 directionToLedge = currentLedge.position - transform.position;
@@ -82,15 +88,29 @@ public class LedgeGrabbing : MonoBehaviour
                 rb.AddForce(directionToLedge.normalized * moveToLedgeSpeed * 1000f * Time.deltaTime);
         }
         //Hold onto ledge
-        //else
-        //{
-        //    if(p)
-        //}
+        else
+        {
+            if (!pm.freeze) pm.freeze = true;
+            if (pm.unlimited) pm.unlimited = false;
+                     
+        }
+        if (distanceToLedge > maxLedgeGrabRange) ExitLedgeHold();
     }
 
-    public void ExitLedgeHold()
+    private void ExitLedgeHold()
     {
+        holding = false;
 
+        pm.restricted = false;
+
+        rb.useGravity = true;
+
+        Invoke(nameof(ResetLastLedge), 1f);
+    }
+
+    private void ResetLastLedge()
+    {
+        lastLedge = null;
     }
 
     // Start is called before the first frame update
