@@ -63,14 +63,12 @@ public class PlayerMovement : MonoBehaviour
         else if (unlimited)
         {
             currentState = StateMove.UNLIMITED;
-            moveSpeed = 999f;
+            currentSpeed = 999f;
             return;
         }
-        else if (grounded)
-        {
-           currentState = StateMove.RUNNING;
-            currentSpeed = moveSpeed;
-        }
+        else    
+            currentState = StateMove.RUNNING;
+            currentSpeed = moveSpeed;      
     }
 
     private void MyInput() 
@@ -79,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
 
         //Jump
-        if(Input.GetKey(jumpKey) && readyToJump && grounded)
+        if(Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
         {
             animator.SetBool("Jump", true);
             Invoke(nameof(Jump), 0.25f);
@@ -133,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         animator.SetBool("Jump", false);
 
+
     }
 
 
@@ -154,13 +153,17 @@ public class PlayerMovement : MonoBehaviour
 
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         animator.SetBool("OnGround", grounded);
-        
 
-        if (grounded) rb.drag = groundDrag; 
+
+        if (grounded) 
+        { 
+            rb.drag = groundDrag; 
+            
+        }
 
         else rb.drag = 0;
 
-
+        Debug.Log(currentSpeed);
 
     }
     private void FixedUpdate()

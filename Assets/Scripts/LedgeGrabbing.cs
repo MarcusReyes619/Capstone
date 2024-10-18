@@ -17,6 +17,12 @@ public class LedgeGrabbing : MonoBehaviour
 
     public bool holding;
 
+    [Header("Ledge Jumping")]
+    public KeyCode jumpKey = KeyCode.Space;
+    public float ledgeJumpForwardForce;
+    public float ledgeJumpUpwardForce;
+
+
     [Header("Ledge Detection")]
     public float ledgeDetectionLength;
     public float ledgeSphereCastRadius;
@@ -27,10 +33,18 @@ public class LedgeGrabbing : MonoBehaviour
 
     private RaycastHit ledgeHit;
 
+    [Header("Exit Ledge")]
+    public bool exitingLedge;
+    public float exitLedgeTime;
+    private float exitLedgeTimer;
+
+
+    
 
     private void LedgeDetection()
     {
-        bool ledgeDetected = Physics.SphereCast(transform.position, ledgeSphereCastRadius, cam.forward, out ledgeHit, ledgeDetectionLength,
+         Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+         bool ledgeDetected = Physics.SphereCast(SphareCast, ledgeSphereCastRadius, cam.forward, out ledgeHit, ledgeDetectionLength,
             whatIsLedge);
 
         if (!ledgeDetected) return;
@@ -42,6 +56,11 @@ public class LedgeGrabbing : MonoBehaviour
 
         if (distanceToLedge < maxLedgeGrabRange && !holding)  EnterLedgeHold();  
     }
+    private void OnDrawGizmosSelected()
+    {
+        
+        //Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
+    }
 
     private void SubStateMachine()
     {
@@ -49,11 +68,20 @@ public class LedgeGrabbing : MonoBehaviour
         float vertInput = Input.GetAxisRaw("Vertical");
         bool anyInputKeyPressed = horInput != 0 || vertInput != 0;
 
+
+        //Substate 1 -Holding onto ledge
         if (holding)
         {
             FreezeRigidbodyOnLedge();
 
             if (anyInputKeyPressed) ExitLedgeHold();
+
+            if (Input.GetKeyDown(jumpKey)) LedgeJump();
+        }
+        else if (exitingLedge)
+        {
+            if (exitLedgeTime > 0) exitLedgeTime -= Time.deltaTime;
+            else exitingLedge = false;
         }
 
     }
@@ -75,7 +103,7 @@ public class LedgeGrabbing : MonoBehaviour
 
     private void FreezeRigidbodyOnLedge()
     {
-        Debug.Log("WORKY");
+        
         rb.useGravity = false;
 
         Vector3 directionToLedge = currentLedge.position - transform.position;
@@ -91,7 +119,7 @@ public class LedgeGrabbing : MonoBehaviour
         else
         {
             if (!pm.freeze) pm.freeze = true;
-            if (pm.unlimited) pm.unlimited = false;
+            if(pm.unlimited) pm.unlimited = false;
                      
         }
         if (distanceToLedge > maxLedgeGrabRange) ExitLedgeHold();
@@ -99,9 +127,14 @@ public class LedgeGrabbing : MonoBehaviour
 
     private void ExitLedgeHold()
     {
+        exitingLedge = true;
+        exitLedgeTimer = exitLedgeTimer;
+
         holding = false;
 
         pm.restricted = false;
+        pm.freeze = false;
+        pm.unlimited = false;
 
         rb.useGravity = true;
 
@@ -111,6 +144,19 @@ public class LedgeGrabbing : MonoBehaviour
     private void ResetLastLedge()
     {
         lastLedge = null;
+    }
+
+    private void LedgeJump()
+    {
+        ExitLedgeHold();
+        Invoke(nameof(DelayedJumpForce), 0.5f);
+    }
+
+    private void DelayedJumpForce()
+    {
+        Vector3 forceToAdd = cam.forward * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
+        rb.velocity = Vector3.zero;
+        rb.AddForce(forceToAdd, ForceMode.Impulse);
     }
 
     // Start is called before the first frame update
@@ -124,5 +170,6 @@ public class LedgeGrabbing : MonoBehaviour
     {
         LedgeDetection();
         SubStateMachine();
+        
     }
 }
