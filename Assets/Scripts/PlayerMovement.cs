@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce;
     public float jumpCoolDown;
     public float airMultipiler;
-    bool readyToJump = true;
+    public bool readyToJump = true;
 
     [Header("KeyBinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -80,7 +80,8 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
         {
             animator.SetBool("Jump", true);
-            Invoke(nameof(Jump), 0.25f);
+            //Invoke(nameof(Jump), 0.25f);
+            Jump();
             readyToJump = false;
         
             Invoke(nameof(ResetJump), jumpCoolDown);
@@ -95,14 +96,14 @@ public class PlayerMovement : MonoBehaviour
         if (restricted) return;
         moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        
-
+        //on ground
         if (grounded) rb.AddForce(moveDir.normalized * currentSpeed * 10f, ForceMode.Force); 
 
+        //in air
         else if(!grounded) rb.AddForce(moveDir.normalized * currentSpeed * 10f * airMultipiler, ForceMode.Force);
 
         //Calculate forward dirction vector
-        animator.SetFloat("Speed", rb.velocity.magnitude);
+        animator.SetFloat("Speed", rb.velocity.magnitude);  
 
     }
 
@@ -114,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if(flatVel.magnitude > moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
-            rb.velocity = new Vector3(limitedVel.x, limitedVel.y, limitedVel.z);
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }
 
@@ -131,16 +132,13 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         animator.SetBool("Jump", false);
 
-
     }
 
 
     // Start is called before the first frame update
     void Start() 
     {
-        //animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        
         rb.freezeRotation = true;
     }
 
@@ -158,12 +156,9 @@ public class PlayerMovement : MonoBehaviour
         if (grounded) 
         { 
             rb.drag = groundDrag; 
-            
         }
 
         else rb.drag = 0;
-
-        Debug.Log(currentSpeed);
 
     }
     private void FixedUpdate()

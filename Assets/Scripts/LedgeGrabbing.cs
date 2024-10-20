@@ -58,8 +58,8 @@ public class LedgeGrabbing : MonoBehaviour
     }
     private void OnDrawGizmosSelected()
     {
-        
-        //Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
+        Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+        Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
     }
 
     private void SubStateMachine()
@@ -138,6 +138,7 @@ public class LedgeGrabbing : MonoBehaviour
 
         rb.useGravity = true;
 
+        StopAllCoroutines();
         Invoke(nameof(ResetLastLedge), 1f);
     }
 
@@ -149,14 +150,31 @@ public class LedgeGrabbing : MonoBehaviour
     private void LedgeJump()
     {
         ExitLedgeHold();
-        Invoke(nameof(DelayedJumpForce), 0.5f);
+       // Invoke(nameof(DelayedJumpForce), 0.05f);
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        Vector3 forceToAdd = moveDir * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
+        rb.velocity = Vector3.zero;
+        rb.AddForce(forceToAdd, ForceMode.Impulse);
+
+        //rb.velocity = rb.velocity + forceToAdd;
     }
 
     private void DelayedJumpForce()
     {
-        Vector3 forceToAdd = cam.forward * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        Vector3 forceToAdd = moveDir * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
         rb.velocity = Vector3.zero;
-        rb.AddForce(forceToAdd, ForceMode.Impulse);
+        // rb.AddForce(forceToAdd, ForceMode.Impulse);
+
+        rb.velocity = rb.velocity + forceToAdd;
+        
+        Debug.Log(rb.velocity);
+       
     }
 
     // Start is called before the first frame update
