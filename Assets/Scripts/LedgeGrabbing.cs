@@ -46,6 +46,7 @@ public class LedgeGrabbing : MonoBehaviour
          Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
          bool ledgeDetected = Physics.SphereCast(SphareCast, ledgeSphereCastRadius, cam.forward, out ledgeHit, ledgeDetectionLength,
             whatIsLedge);
+        Debug.Log(cam.forward);
 
         if (!ledgeDetected) return;
 
@@ -159,7 +160,7 @@ public class LedgeGrabbing : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.AddForce(forceToAdd, ForceMode.Impulse);
 
-        //rb.velocity = rb.velocity + forceToAdd;
+        
     }
 
     private void DelayedJumpForce()
