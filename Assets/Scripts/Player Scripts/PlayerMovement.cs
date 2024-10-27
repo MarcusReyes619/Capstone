@@ -31,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
+    //Attack
+    public bool isAtk = false;
+
     Vector3 moveDir;
 
     Rigidbody rb;
@@ -40,7 +43,8 @@ public class PlayerMovement : MonoBehaviour
         FREEZE,
         RUNNING,
         UNLIMITED,
-        AIR
+        AIR,
+        ATTACK
     }
 
 
@@ -85,6 +89,13 @@ public class PlayerMovement : MonoBehaviour
             readyToJump = false;
         
             Invoke(nameof(ResetJump), jumpCoolDown);
+
+        }
+        //Attack
+        if (Input.GetButton("Fire1"))
+        {
+           Attack();
+           Invoke(nameof(RestAttack), 1f);
 
         }
 
@@ -132,6 +143,19 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         animator.SetBool("Jump", false);
 
+    }
+
+    private void Attack()
+    {
+        isAtk = true;
+        animator.SetBool("IsAtk", isAtk);   
+
+    }
+
+    private void RestAttack()
+    {
+        isAtk = false;
+        animator.SetBool("IsAtk", isAtk);
     }
 
 
