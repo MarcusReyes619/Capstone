@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
     //Attack
     public bool isAtk = false;
+    int atkAnimation = 0;
 
     Vector3 moveDir;
 
@@ -92,7 +93,7 @@ public class PlayerMovement : MonoBehaviour
 
         }
         //Attack
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
            Attack();
            Invoke(nameof(RestAttack), 1f);
@@ -148,6 +149,23 @@ public class PlayerMovement : MonoBehaviour
     private void Attack()
     {
         isAtk = true;
+        //to stop the basic input controlls till the attack is finished
+        restricted = true;
+
+        // rb.AddForce(, ForceMode.Impulse);
+        
+        atkAnimation++;
+
+        if(atkAnimation >= 5)
+        {
+            //rest animations
+            atkAnimation = 0;
+            //attack animtion
+
+        }
+
+       
+
         animator.SetBool("IsAtk", isAtk);   
 
     }
@@ -155,6 +173,8 @@ public class PlayerMovement : MonoBehaviour
     private void RestAttack()
     {
         isAtk = false;
+
+        restricted = false;
         animator.SetBool("IsAtk", isAtk);
     }
 
@@ -173,6 +193,9 @@ public class PlayerMovement : MonoBehaviour
         SpeedLimit();
         StateHandler();
 
+
+
+        //ground
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         animator.SetBool("OnGround", grounded);
 
