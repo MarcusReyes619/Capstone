@@ -156,6 +156,7 @@ public class PlayerMovement : MonoBehaviour
         
         atkAnimation++;
 
+        
         if(atkAnimation >= 5)
         {
             //rest animations

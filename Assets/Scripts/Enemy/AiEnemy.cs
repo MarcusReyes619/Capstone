@@ -23,6 +23,8 @@ public class AiEnemy : MonoBehaviour
     //States
     public float sightRange, atkRange;
     public bool playerInSightRange, playerInAtkRange;
+
+    public Rigidbody rb;
     enum State
     {
         PORTAL,
@@ -60,11 +62,18 @@ public class AiEnemy : MonoBehaviour
         playerInAtkRange = Physics.CheckSphere(transform.position, atkRange, whatIsPlayer);
 
         //Change State
+      
         if (!playerInSightRange && !playerInAtkRange) currentState = State.PORTAL;
-        if (!playerInSightRange && playerInAtkRange) currentState = State.CHASE;
+        if (playerInSightRange && !playerInAtkRange) currentState = State.CHASE;
         if (playerInSightRange && playerInAtkRange) currentState = State.ATTACK;
 
 
+        WhatsTheMove();
+
+       
+
+        
+        
 
     }
 
@@ -109,6 +118,8 @@ public class AiEnemy : MonoBehaviour
             case (State.ATTACK):
                 //Atk code here
 
+                Debug.Log("IM TRYING OKAY");
+
                 agent.SetDestination(transform.position);
                 transform.LookAt(player);
                 break;
@@ -116,10 +127,14 @@ public class AiEnemy : MonoBehaviour
             //Dead
             case (State.DEAD):
                 break;
-
-
         }
     }
 
-   
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, sightRange);
+    }
+
+
 }
