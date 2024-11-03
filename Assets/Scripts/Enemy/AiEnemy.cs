@@ -24,6 +24,8 @@ public class AiEnemy : MonoBehaviour
     public float sightRange, atkRange;
     public bool playerInSightRange, playerInAtkRange;
 
+    public Animator animtor;
+
     public Rigidbody rb;
     enum State
     {
@@ -69,11 +71,7 @@ public class AiEnemy : MonoBehaviour
 
 
         WhatsTheMove();
-
-       
-
-        
-        
+        animtor.SetFloat("Speed", rb.velocity.magnitude);
 
     }
 
@@ -118,7 +116,9 @@ public class AiEnemy : MonoBehaviour
             case (State.ATTACK):
                 //Atk code here
 
-                Debug.Log("IM TRYING OKAY");
+
+                Attack();
+                Invoke(nameof(ResetAtk), 1f);
 
                 agent.SetDestination(transform.position);
                 transform.LookAt(player);
@@ -127,6 +127,18 @@ public class AiEnemy : MonoBehaviour
             //Dead
             case (State.DEAD):
                 break;
+        }
+
+        void Attack()
+        {
+            isAtk = true;
+            animtor.SetBool("Atk", isAtk);
+        }
+
+        void ResetAtk()
+        {
+            isAtk = false;
+            animtor.SetBool("Atk", isAtk);
         }
     }
 

@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
         if(Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
         {
             animator.SetBool("Jump", true);
-            //Invoke(nameof(Jump), 0.25f);
+          
             Jump();
             readyToJump = false;
         
@@ -101,6 +101,8 @@ public class PlayerMovement : MonoBehaviour
         }
 
     }
+
+    #region Movement
 
     private void MovePlayer()
     {
@@ -145,14 +147,17 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("Jump", false);
 
     }
+    #endregion
 
+    #region Attack
     private void Attack()
     {
         isAtk = true;
         //to stop the basic input controlls till the attack is finished
         restricted = true;
 
-        // rb.AddForce(, ForceMode.Impulse);
+        Vector3 forcedApplyed = orientation.forward * 5.5f;
+        rb.AddForce(forcedApplyed , ForceMode.Impulse);
         
         atkAnimation++;
 
@@ -164,9 +169,7 @@ public class PlayerMovement : MonoBehaviour
             //attack animtion
 
         }
-
-       
-
+        
         animator.SetBool("IsAtk", isAtk);   
 
     }
@@ -179,7 +182,7 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("IsAtk", isAtk);
     }
 
-
+    #endregion
     // Start is called before the first frame update
     void Start() 
     {

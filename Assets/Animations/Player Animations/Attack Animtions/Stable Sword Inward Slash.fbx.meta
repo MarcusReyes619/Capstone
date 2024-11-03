@@ -1,44 +1,9 @@
 fileFormatVersion: 2
-guid: f63e0d7a944a4c6489a438895abc4751
+guid: a5d029b030705204d93d07bd1323a842
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_Material
-    second: {fileID: 2100000, guid: 7a1a659bf94268844b001bc7f92369fb, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_Material1
-    second: {fileID: 2100000, guid: 8e57166729a27494e9f20419f465708e, type: 2}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_body_diffuse
-    second: {fileID: 2800000, guid: 1cd95427b582ba143b0709462f488b53, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_diffuse
-    second: {fileID: 2800000, guid: d3567c2b93feb7c4ebdf193a82d9cdd8, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_glow
-    second: {fileID: 2800000, guid: 3a7ae14bf656fa249964c9dd919cd978, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_normal
-    second: {fileID: 2800000, guid: 559bfef1a7ef5b34a979f31b24d2fc7c, type: 3}
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: skeletonZombie_specular
-    second: {fileID: 2800000, guid: 48d615b6f34bab74cbadc85dbe7bf5d5, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -59,7 +24,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -128,13 +93,13 @@ ModelImporter:
     globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
-    hasExtraRoot: 1
+    hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   autoGenerateAvatarMappingIfUnspecified: 1
-  animationType: 3
+  animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 0
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
