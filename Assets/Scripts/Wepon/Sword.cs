@@ -8,7 +8,7 @@ public class Sword : MonoBehaviour
     public PlayerMovement pm;
 
     //check if attacking
-    bool isAtk;
+    public bool isAtk;
 
     void Start()
     {
@@ -18,7 +18,7 @@ public class Sword : MonoBehaviour
     
     void Update()
     {
-        
+        isAtk = pm.isAtk;
     }
 
     private void OnTriggerEnter(Collider other)

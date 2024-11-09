@@ -24,6 +24,8 @@ public class AiEnemy : MonoBehaviour
     public float sightRange, atkRange;
     public bool playerInSightRange, playerInAtkRange;
 
+    bool restirced;
+
     public Animator animtor;
 
     public Rigidbody rb;
@@ -32,13 +34,21 @@ public class AiEnemy : MonoBehaviour
         PORTAL,
         CHASE,
         ATTACK,
+        HIT,
         DEAD
+    }
+
+    //figure out later stuip
+    enum AttackType
+    {
+
     }
 
     State currentState;
 
-    Animator animator;
 
+
+    //Stats
     public float Hp;
 
 
@@ -59,19 +69,28 @@ public class AiEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Check for player in sight and in range
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
-        playerInAtkRange = Physics.CheckSphere(transform.position, atkRange, whatIsPlayer);
+        if (Hp > 0)
+        {
+            //Check for player in sight and in range
+            playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+            playerInAtkRange = Physics.CheckSphere(transform.position, atkRange, whatIsPlayer);
 
-        //Change State
-      
-        if (!playerInSightRange && !playerInAtkRange) currentState = State.PORTAL;
-        if (playerInSightRange && !playerInAtkRange) currentState = State.CHASE;
-        if (playerInSightRange && playerInAtkRange) currentState = State.ATTACK;
+            //Change State
+            if (!restirced)
+            {
+                if (!playerInSightRange && !playerInAtkRange) currentState = State.PORTAL;
+                if (playerInSightRange && !playerInAtkRange) currentState = State.CHASE;
+                if (playerInSightRange && playerInAtkRange) currentState = State.ATTACK;
+            }
 
+            WhatsTheMove();
+            animtor.SetFloat("Speed", rb.velocity.magnitude);
 
-        WhatsTheMove();
-        animtor.SetFloat("Speed", rb.velocity.magnitude);
+        }
+        else
+        {
+            currentState = State.DEAD;
+        }
 
     }
 
@@ -115,30 +134,57 @@ public class AiEnemy : MonoBehaviour
             //Atk
             case (State.ATTACK):
                 //Atk code here
-
-
                 Attack();
                 Invoke(nameof(ResetAtk), 1f);
-
                 agent.SetDestination(transform.position);
                 transform.LookAt(player);
                 break;
-            
+
+            //HIT
+            case (State.HIT):
+                animtor.SetBool("Hit", restirced);
+                Invoke(nameof(Recovered), 1.5f);          
+                break;       
             //Dead
             case (State.DEAD):
+                animtor.SetBool("IsdDead", true);
+                Invoke(nameof(Destroy), 1.5f);
                 break;
         }
+   
+    }
+    void Attack()
+    {
+        isAtk = true;
+        animtor.SetBool("Atk", isAtk);
+    }
 
-        void Attack()
-        {
-            isAtk = true;
-            animtor.SetBool("Atk", isAtk);
-        }
+    void ResetAtk()
+    {
+        isAtk = false;
+        animtor.SetBool("Atk", isAtk);
+    }
 
-        void ResetAtk()
+    //called to reset enemy after getting hit
+    public void Recovered()
+    {
+        currentState = State.CHASE;
+        restirced = false;
+        animtor.SetBool("Hit", restirced);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent<Sword>(out Sword enemy))
         {
-            isAtk = false;
-            animtor.SetBool("Atk", isAtk);
+            if (enemy.isAtk)
+            {
+                restirced = true;
+                rb.AddForce(-transform.forward * 6.5f, ForceMode.Impulse);
+                currentState = State.HIT;
+                Hp -= enemy.dmg;
+            }
+
         }
     }
 

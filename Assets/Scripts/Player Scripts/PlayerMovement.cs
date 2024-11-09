@@ -46,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         FREEZE,
         RUNNING,
         UNLIMITED,
+        Hit,
         AIR,
         ATTACK
     }
@@ -158,9 +159,9 @@ public class PlayerMovement : MonoBehaviour
         //to stop the basic input controlls till the attack is finished
         restricted = true;
 
-        Vector3 forcedApplyed = playerObj.transform.forward * 5.5f;
+        //Vector3 forcedApplyed = playerObj.transform.forward * 5.5f;
         
-        rb.AddForce(forcedApplyed , ForceMode.Impulse);
+        //rb.AddForce(forcedApplyed , ForceMode.Impulse);
         
         atkAnimation++;
 
