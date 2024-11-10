@@ -8,6 +8,7 @@ public class AiEnemy : MonoBehaviour
     public NavMeshAgent agent;
 
     public Transform player;
+    public Transform obj;
 
     public LayerMask whatIsGround, whatIsPlayer;
 
@@ -19,7 +20,7 @@ public class AiEnemy : MonoBehaviour
     //Attacks
     public float timeBetweenAtk;
     bool isAtk;
-
+    public GameObject attack;
     //States
     public float sightRange, atkRange;
     public bool playerInSightRange, playerInAtkRange;
@@ -38,11 +39,8 @@ public class AiEnemy : MonoBehaviour
         DEAD
     }
 
-    //figure out later stuip
-    enum AttackType
-    {
-
-    }
+    //Ragdoll stuff
+    private Rigidbody[] _rigdollRigidboodies;
 
     State currentState;
 
@@ -56,6 +54,8 @@ public class AiEnemy : MonoBehaviour
     {
         player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
+        _rigdollRigidboodies = GetComponentsInChildren<Rigidbody>();
+        DisableRagdoll();
     }
 
    
@@ -65,6 +65,7 @@ public class AiEnemy : MonoBehaviour
     {
         
     }
+
 
     // Update is called once per frame
     void Update()
@@ -81,18 +82,34 @@ public class AiEnemy : MonoBehaviour
                 if (!playerInSightRange && !playerInAtkRange) currentState = State.PORTAL;
                 if (playerInSightRange && !playerInAtkRange) currentState = State.CHASE;
                 if (playerInSightRange && playerInAtkRange) currentState = State.ATTACK;
-            }
-
-            WhatsTheMove();
-            animtor.SetFloat("Speed", rb.velocity.magnitude);
-
+            }          
+            
+            
         }
         else
         {
             currentState = State.DEAD;
         }
+        WhatsTheMove();
 
     }
+    //Disables the rigdoll 
+    void DisableRagdoll()
+    {
+        foreach(var rig in _rigdollRigidboodies)
+        {
+            rig.isKinematic = true;
+        }
+    }
+    //enable rigdoll 
+    void EnableRagdoll()
+    {
+        foreach (var rig in _rigdollRigidboodies)
+        {
+            rig.isKinematic = false;
+        }
+    }
+
 
     //checks the current state and does stuff depending on the state
     void WhatsTheMove()
@@ -117,12 +134,12 @@ public class AiEnemy : MonoBehaviour
                 if (walkPointSet)
                 {
                     agent.SetDestination(walkPoint);
-                }
+                }            
 
                 //checks if agent reached its destination
                 Vector3 distanceToWalkToPoint = transform.position - walkPoint;
                 if (distanceToWalkToPoint.magnitude < 1f) walkPointSet = false;
-                
+                animtor.SetFloat("Speed", agent.velocity.magnitude);
 
                 break;
 
@@ -133,11 +150,11 @@ public class AiEnemy : MonoBehaviour
 
             //Atk
             case (State.ATTACK):
-                //Atk code here
-                Attack();
-                Invoke(nameof(ResetAtk), 1f);
                 agent.SetDestination(transform.position);
                 transform.LookAt(player);
+                //Atk code here
+                if (!isAtk)Attack();
+                Invoke(nameof(ResetAtk), 1f);      
                 break;
 
             //HIT
@@ -147,8 +164,12 @@ public class AiEnemy : MonoBehaviour
                 break;       
             //Dead
             case (State.DEAD):
-                animtor.SetBool("IsdDead", true);
-                Invoke(nameof(Destroy), 1.5f);
+                animtor.enabled = false;
+                EnableRagdoll();
+               rb.velocity = Vector3.zero;
+                 
+          
+                Invoke(nameof(Dead), 10f);
                 break;
         }
    
@@ -156,6 +177,7 @@ public class AiEnemy : MonoBehaviour
     void Attack()
     {
         isAtk = true;
+        Instantiate(attack, transform.position, transform.rotation);
         animtor.SetBool("Atk", isAtk);
     }
 
@@ -186,6 +208,11 @@ public class AiEnemy : MonoBehaviour
             }
 
         }
+    }
+
+    void Dead()
+    {
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()

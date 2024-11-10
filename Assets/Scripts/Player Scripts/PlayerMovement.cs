@@ -41,6 +41,9 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody rb;
 
+
+    public float HP;
+
     public enum StateMove
     {
         FREEZE,
@@ -185,8 +188,16 @@ public class PlayerMovement : MonoBehaviour
         restricted = false;
         animator.SetBool("IsAtk", isAtk);
     }
-
     #endregion
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent<EnemyAttack>(out EnemyAttack enemy))
+        {
+            Debug.Log("I GOT SMAKED");
+        }
+    }
+
     // Start is called before the first frame update
     void Start() 
     {
