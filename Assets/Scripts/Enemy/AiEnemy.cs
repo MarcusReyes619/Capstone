@@ -160,7 +160,9 @@ public class AiEnemy : MonoBehaviour
             //HIT
             case (State.HIT):
                 animtor.SetBool("Hit", restirced);
-                Invoke(nameof(Recovered), 1.5f);          
+                rb.AddForce(-transform.forward * 0.2f, ForceMode.Impulse);
+             
+                Invoke(nameof(Recovered), .5f);          
                 break;       
             //Dead
             case (State.DEAD):
@@ -172,6 +174,7 @@ public class AiEnemy : MonoBehaviour
                 Invoke(nameof(Dead), 10f);
                 break;
         }
+      
    
     }
     void Attack()
@@ -190,21 +193,30 @@ public class AiEnemy : MonoBehaviour
     //called to reset enemy after getting hit
     public void Recovered()
     {
+        agent.enabled = true;
+        rb.isKinematic = true;
         currentState = State.CHASE;
         restirced = false;
         animtor.SetBool("Hit", restirced);
     }
 
+    //HIT CODE
     private void OnTriggerEnter(Collider other)
+    {
+        
+    }
+    private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.TryGetComponent<Sword>(out Sword enemy))
         {
             if (enemy.isAtk)
             {
                 restirced = true;
-                rb.AddForce(-transform.forward * 6.5f, ForceMode.Impulse);
+                agent.enabled = false;
+                rb.isKinematic = false;
                 currentState = State.HIT;
                 Hp -= enemy.dmg;
+                Debug.Log(Hp);
             }
 
         }
