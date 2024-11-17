@@ -102,8 +102,12 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
            Attack();
-           Invoke(nameof(RestAttack), 1f);
+           //Invoke(nameof(RestAttack), 1f);
 
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            animator.SetBool("AttackMode", true);
         }
 
     }
@@ -114,7 +118,7 @@ public class PlayerMovement : MonoBehaviour
     {
         //calculate movement Direction
         if (restricted) return;
-        moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput; 
 
         //on ground
         if (grounded) rb.AddForce(moveDir.normalized * currentSpeed * 10f, ForceMode.Force); 
@@ -162,10 +166,10 @@ public class PlayerMovement : MonoBehaviour
         //to stop the basic input controlls till the attack is finished
         restricted = true;
 
-        //Vector3 forcedApplyed = playerObj.transform.forward * 5.5f;
-        
-        //rb.AddForce(forcedApplyed , ForceMode.Impulse);
-        
+        Vector3 forcedApplyed = playerObj.transform.forward * 5.5f;
+
+        rb.AddForce(forcedApplyed, ForceMode.Impulse);
+
         atkAnimation++;
 
         
@@ -177,16 +181,18 @@ public class PlayerMovement : MonoBehaviour
 
         }
         
-        animator.SetBool("IsAtk", isAtk);   
+        animator.SetBool("IsAtk", isAtk);
+        animator.SetInteger("AtkSate", atkAnimation);
 
     }
 
-    private void RestAttack()
+    public void ResetAttack()
     {
         isAtk = false;
 
         restricted = false;
         animator.SetBool("IsAtk", isAtk);
+        Debug.Log("Testy");
     }
     #endregion
 

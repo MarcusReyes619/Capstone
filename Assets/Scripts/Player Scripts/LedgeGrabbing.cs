@@ -54,12 +54,12 @@ public class LedgeGrabbing : MonoBehaviour
 
         if (ledgeHit.transform == lastLedge) return;
 
-        if (distanceToLedge < maxLedgeGrabRange && !holding)  EnterLedgeHold();  
+        if (distanceToLedge < maxLedgeGrabRange && !holding) EnterLedgeHold(); 
     }
     private void OnDrawGizmosSelected()
     {
-        Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
-        Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
+        //Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+        //Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
        
     }
 
@@ -92,11 +92,11 @@ public class LedgeGrabbing : MonoBehaviour
 
         pm.unlimited = true;
         pm.restricted = true;
-
+        pm.playerObj.LookAt(transform);
+        pm.animator.SetBool("Hanging", true);
 
         currentLedge = ledgeHit.transform;
         lastLedge = ledgeHit.transform;
-
         rb.useGravity = false;
         rb.velocity = Vector3.zero;
         
@@ -111,17 +111,20 @@ public class LedgeGrabbing : MonoBehaviour
         float distanceToLedge = Vector3.Distance(transform.position, currentLedge.position);
 
         //move player to ledge
-        if(distanceToLedge > 1f)
+        if(distanceToLedge > 0.5f)
         {
             if (rb.velocity.magnitude < moveToLedgeSpeed)
-                rb.AddForce(directionToLedge.normalized * moveToLedgeSpeed * 1000f * Time.deltaTime);
+                //rb.AddForce(directionToLedge.normalized * moveToLedgeSpeed * 1000f * Time.deltaTime);
+            Vector3.MoveTowards(pm.transform.position, transform.position, moveToLedgeSpeed * 5f);
+            
         }
         //Hold onto ledge
         else
         {
             if (!pm.freeze) pm.freeze = true;
             if(pm.unlimited) pm.unlimited = false;
-                     
+           
+            
         }
         if (distanceToLedge > maxLedgeGrabRange) ExitLedgeHold();
     }
@@ -138,9 +141,10 @@ public class LedgeGrabbing : MonoBehaviour
         pm.unlimited = false;
 
         rb.useGravity = true;
+        pm.animator.SetBool("Hanging", false);
 
         StopAllCoroutines();
-        Invoke(nameof(ResetLastLedge), 1f);
+        Invoke(nameof(ResetLastLedge), 2f);
     }
 
     private void ResetLastLedge()
@@ -151,14 +155,14 @@ public class LedgeGrabbing : MonoBehaviour
     private void LedgeJump()
     {
         ExitLedgeHold();
-       // Invoke(nameof(DelayedJumpForce), 0.05f);
+        Invoke(nameof(DelayedJumpForce), 0.05f);
 
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
-        Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        Vector3 forceToAdd = moveDir * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
-        rb.velocity = Vector3.zero;
-        rb.AddForce(forceToAdd, ForceMode.Impulse);
+        //float horizontalInput = Input.GetAxisRaw("Horizontal");
+        //float verticalInput = Input.GetAxisRaw("Vertical");
+        //Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        //Vector3 forceToAdd = moveDir * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
+        //rb.velocity = Vector3.zero;
+        //rb.AddForce(forceToAdd, ForceMode.Impulse);
 
         
     }
@@ -170,7 +174,7 @@ public class LedgeGrabbing : MonoBehaviour
         Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
         Vector3 forceToAdd = moveDir * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
         rb.velocity = Vector3.zero;
-        // rb.AddForce(forceToAdd, ForceMode.Impulse);
+         rb.AddForce(forceToAdd, ForceMode.Impulse);
 
         rb.velocity = rb.velocity + forceToAdd;
         
