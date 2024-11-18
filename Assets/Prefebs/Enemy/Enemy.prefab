@@ -2765,7 +2765,7 @@ MonoBehaviour:
   timeBetweenAtk: 0.5
   attack: {fileID: 4869037503605724419, guid: f5ac711d5487b9543bcae4ae8cdee403, type: 3}
   sightRange: 5
-  atkRange: 2
+  atkRange: 1
   playerInSightRange: 0
   playerInAtkRange: 0
   animtor: {fileID: 3870656833207513835}

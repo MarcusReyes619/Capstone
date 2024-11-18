@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         ATTACK
     }
 
-
+    bool atkMode = false;
     public bool freeze;
     public bool unlimited;
 
@@ -101,13 +101,20 @@ public class PlayerMovement : MonoBehaviour
         //Attack
         if (Input.GetButtonDown("Fire1"))
         {
-           Attack();
-           //Invoke(nameof(RestAttack), 1f);
-
+            if(atkMode) Attack();          
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            animator.SetBool("AttackMode", true);
+            if (!atkMode)
+            {
+                atkMode = true;
+                animator.SetBool("AttackMode", true);
+            }
+            else
+            {
+                animator.SetBool("AttackMode", false);
+                atkMode = false;
+            }
         }
 
     }
@@ -162,40 +169,42 @@ public class PlayerMovement : MonoBehaviour
     #region Attack
     private void Attack()
     {
-        isAtk = true;
-        //to stop the basic input controlls till the attack is finished
-        restricted = true;
 
-        Vector3 forcedApplyed = playerObj.transform.forward * 5.5f;
-
-        rb.AddForce(forcedApplyed, ForceMode.Impulse);
 
         atkAnimation++;
+        if (!isAtk)
+        {    
+            if (atkAnimation > 5) atkAnimation = 1;
+            isAtk = true;
+            //to stop the basic input controlls till the attack is finished
+            restricted = true;
 
-        
-        if(atkAnimation >= 5)
-        {
-            //rest animations
-            atkAnimation = 0;
-            //attack animtion
 
+            Vector3 forcedApplyed = playerObj.transform.forward * 5.5f;
+
+            rb.AddForce(forcedApplyed, ForceMode.Impulse); 
+
+            animator.SetInteger("AtkState", atkAnimation);
         }
-        
-        animator.SetBool("IsAtk", isAtk);
-        animator.SetInteger("AtkSate", atkAnimation);
+
+        Debug.Log(atkAnimation);
 
     }
 
     public void ResetAttack()
     {
         isAtk = false;
-
         restricted = false;
         animator.SetBool("IsAtk", isAtk);
-        Debug.Log("Testy");
+        //sets the animtior back to zero
+        animator.SetInteger("AtkState", 0);
     }
+
+
     #endregion
 
+
+    #region unity Functions
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent<EnemyAttack>(out EnemyAttack enemy))
@@ -237,4 +246,5 @@ public class PlayerMovement : MonoBehaviour
     {
         MovePlayer();
     }
+    #endregion
 }
