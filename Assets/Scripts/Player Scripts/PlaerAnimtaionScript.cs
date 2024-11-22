@@ -9,5 +9,10 @@ public class Attacking : MonoBehaviour
     {
         pm.ResetAttack();
     }
+
+    public void Jump()
+    {
+        pm.Jump();
+    }
  
 }

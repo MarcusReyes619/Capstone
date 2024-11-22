@@ -90,9 +90,9 @@ public class PlayerMovement : MonoBehaviour
         //Jump
         if(Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
         {
+
             animator.SetBool("Jump", true);
-          
-            Jump();
+            //Jump();
             readyToJump = false;
         
             Invoke(nameof(ResetJump), jumpCoolDown);
@@ -150,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void Jump()
+    public void Jump()
     {
         //reset y vel
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
