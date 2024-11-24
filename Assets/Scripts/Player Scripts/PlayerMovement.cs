@@ -49,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
     //RayCast
     public LayerMask knifeLayer;
     RaycastHit knifeFound;
+    public GameObject kunai;
     public enum StateMove
     {
         FREEZE,
@@ -107,6 +108,10 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             if(atkMode) Attack();          
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            if (atkMode) KunaiThrow();
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -195,6 +200,11 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log(atkAnimation);
 
     }
+    void KunaiThrow()
+    {
+        Instantiate(kunai, orientation.position, cam.rotation);
+       
+    }
 
     public void ResetAttack()
     {
@@ -218,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
         {
             Debug.Log(knifeFound.collider.gameObject.name + " Hit");
         }
-        //Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
+        Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
 
     }
 
