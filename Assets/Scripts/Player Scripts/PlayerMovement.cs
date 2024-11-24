@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public Animator animator;
+    public Transform cam;
 
     [Header("Movment")]
     public float moveSpeed;
@@ -44,6 +45,10 @@ public class PlayerMovement : MonoBehaviour
 
     public float HP;
 
+
+    //RayCast
+    public LayerMask knifeLayer;
+    RaycastHit knifeFound;
     public enum StateMove
     {
         FREEZE,
@@ -204,6 +209,19 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
 
+    //Kuni Tellopation
+    private void KnifeDection()
+    {
+        Ray ray = new Ray(cam.transform.position, cam.forward);
+
+        if (Physics.Raycast(ray, out knifeFound, 50f, knifeLayer))
+        {
+            Debug.Log(knifeFound.collider.gameObject.name + " Hit");
+        }
+        //Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
+
+    }
+
     #region unity Functions
     private void OnTriggerEnter(Collider other)
     {
@@ -226,7 +244,7 @@ public class PlayerMovement : MonoBehaviour
         MyInput();
         SpeedLimit();
         StateHandler();
-
+        KnifeDection();
 
 
         //ground
@@ -242,6 +260,7 @@ public class PlayerMovement : MonoBehaviour
         else rb.drag = 0;
 
     }
+  
     private void FixedUpdate()
     {
         MovePlayer();
