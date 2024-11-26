@@ -2163,6 +2163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4713911958005593960}
   - component: {fileID: 3870656833207513835}
+  - component: {fileID: 611595548654617786}
   m_Layer: 0
   m_Name: Skeletonzombie T Avelange
   m_TagString: Untagged
@@ -2208,6 +2209,87 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &611595548654617786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5341547746112564690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fcffd8a2324de240830fdaf34ee171b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  em: {fileID: 4568383805726771358}
+--- !u!1 &5543817357977407196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6574222646823049928}
+  - component: {fileID: 290096594817947108}
+  - component: {fileID: 2663535805650761434}
+  m_Layer: 0
+  m_Name: Attack
+  m_TagString: EnemyAtk
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6574222646823049928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5543817357977407196}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.261, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2080082870205695296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &290096594817947108
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5543817357977407196}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5, y: 1.14, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2663535805650761434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5543817357977407196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1fdba859ce365643ba6bb86864bf119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  em: {fileID: 4568383805726771358}
+  collider: {fileID: 290096594817947108}
 --- !u!1 &5846209312360701960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2763,9 +2845,10 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 5
   timeBetweenAtk: 0.5
+  isAtk: 0
   attack: {fileID: 4869037503605724419, guid: f5ac711d5487b9543bcae4ae8cdee403, type: 3}
   sightRange: 5
-  atkRange: 1
+  atkRange: 2
   playerInSightRange: 0
   playerInAtkRange: 0
   animtor: {fileID: 3870656833207513835}
@@ -3553,6 +3636,7 @@ Transform:
   - {fileID: 505078960740259078}
   - {fileID: 2098327695257338076}
   - {fileID: 67453846541294805}
+  - {fileID: 6574222646823049928}
   m_Father: {fileID: 2321276735850344058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8721526283567271415

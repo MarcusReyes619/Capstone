@@ -19,7 +19,7 @@ public class AiEnemy : MonoBehaviour
 
     //Attacks
     public float timeBetweenAtk;
-    bool isAtk;
+    public bool isAtk;
     public GameObject attack;
     //States
     public float sightRange, atkRange;
@@ -180,13 +180,14 @@ public class AiEnemy : MonoBehaviour
     void Attack()
     {
         isAtk = true;
-        Instantiate(attack, transform.position, transform.rotation);
+        restirced = true;
         animtor.SetBool("Atk", isAtk);
     }
 
-    void ResetAtk()
+    public void ResetAtk()
     {
         isAtk = false;
+        restirced = false;
         animtor.SetBool("Atk", isAtk);
     }
 

@@ -63,6 +63,7 @@ public class PlayerMovement : MonoBehaviour
     bool atkMode = false;
     public bool freeze;
     public bool unlimited;
+    bool hit;
 
     public bool restricted;
 
@@ -235,10 +236,21 @@ public class PlayerMovement : MonoBehaviour
     #region unity Functions
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<EnemyAttack>(out EnemyAttack enemy))
+        
+        if (other.gameObject.tag == "EnemyAtk")
         {
-            Debug.Log("I GOT SMAKED");
+            if (!hit)
+            {
+
+                Debug.Log("I GOT SMAKED");
+                hit = true;
+                Invoke(nameof(Recovered), 1f);
+            }
         }
+    }
+    public void Recovered()
+    {
+        hit = false;
     }
 
     // Start is called before the first frame update
