@@ -23,9 +23,6 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(pm.isAtk == true && other.gameObject.TryGetComponent<TestEnemy>(out TestEnemy enemy))
-        {
-            enemy.Test();
-        }
+       
     }
 }

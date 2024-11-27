@@ -50,6 +50,10 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask knifeLayer;
     RaycastHit knifeFound;
     public GameObject kunai;
+
+
+    //ragdoll
+   // private Rigidbody[] _rigdollRigidboodies;
     public enum StateMove
     {
         FREEZE,
@@ -84,6 +88,7 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = 999f;
             return;
         }
+       
         else    
             currentState = StateMove.RUNNING;
             currentSpeed = moveSpeed;      
@@ -108,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
         //Attack
         if (Input.GetButtonDown("Fire1"))
         {
-            if(atkMode) Attack();          
+            if(atkMode && !isAtk) Attack();          
         }
         if (Input.GetButtonDown("Fire2"))
         {
@@ -180,8 +185,6 @@ public class PlayerMovement : MonoBehaviour
     #region Attack
     private void Attack()
     {
-
-
         atkAnimation++;
         if (!isAtk)
         {    
@@ -233,6 +236,22 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    #region Hit Methods
+
+    void Hit()
+    {
+        hit = true;
+        restricted = true;
+        animator.SetBool("Hit", hit);
+    }
+    public void Recovered()
+    {
+        hit = false;
+        restricted = false;
+        animator.SetBool("Hit", hit);
+    }
+    #endregion
+
     #region unity Functions
     private void OnTriggerEnter(Collider other)
     {
@@ -244,13 +263,31 @@ public class PlayerMovement : MonoBehaviour
 
                 Debug.Log("I GOT SMAKED");
                 hit = true;
+                other.TryGetComponent<EnemyAttack>(out EnemyAttack em);
+                Hit();
+
+                //resets atk in case player was hit mid atk
+                isAtk = false;
+
+                //moves playerway from enemy
+                Vector3 hitDir = new Vector3(em.gameObject.transform.position.x, 0, em.gameObject.transform.position.z);
+                rb.AddForce(hitDir * 5f, ForceMode.Impulse);
+
+                //looks in the dir that was hit
+                orientation.LookAt(hitDir);
+                playerObj.LookAt(hitDir);
+             
+                //animator.SetBool("Hit", hit);
                 Invoke(nameof(Recovered), 1f);
             }
         }
     }
-    public void Recovered()
+    
+
+    private void Awake()
     {
-        hit = false;
+       
+     
     }
 
     // Start is called before the first frame update
@@ -258,6 +295,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        
     }
 
     // Update is called once per frame
@@ -267,7 +305,7 @@ public class PlayerMovement : MonoBehaviour
         SpeedLimit();
         StateHandler();
         KnifeDection();
-
+        
 
         //ground
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);

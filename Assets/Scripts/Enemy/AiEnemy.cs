@@ -63,13 +63,15 @@ public class AiEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb.freezeRotation = true;
+        rb.isKinematic = false;
     }
 
 
     // Update is called once per frame
     void Update()
     {
+        
         if (Hp > 0)
         {
             //Check for player in sight and in range
@@ -151,24 +153,24 @@ public class AiEnemy : MonoBehaviour
             //Atk
             case (State.ATTACK):
                 agent.SetDestination(transform.position);
-                transform.LookAt(player);
+                Vector3 lookHere = new Vector3(player.position.x, 0, player.position.z);
+                //transform.LookAt(lookHere);
                 //Atk code here
                 if (!isAtk)Attack();
+                animtor.SetBool("Atk", isAtk);
                 Invoke(nameof(ResetAtk), 1f);      
                 break;
 
             //HIT
             case (State.HIT):
-                animtor.SetBool("Hit", restirced);
-                rb.AddForce(-transform.forward * 0.2f, ForceMode.Impulse);
-             
-                Invoke(nameof(Recovered), .5f);          
+                animtor.SetBool("Hit", restirced);       
                 break;       
             //Dead
             case (State.DEAD):
                 animtor.enabled = false;
                 EnableRagdoll();
                rb.velocity = Vector3.zero;
+                rb.isKinematic = false;
                  
           
                 Invoke(nameof(Dead), 10f);
@@ -177,12 +179,12 @@ public class AiEnemy : MonoBehaviour
       
    
     }
-    void Attack()
+    public void Attack()
     {
         isAtk = true;
         restirced = true;
-        animtor.SetBool("Atk", isAtk);
     }
+
 
     public void ResetAtk()
     {
@@ -194,35 +196,32 @@ public class AiEnemy : MonoBehaviour
     //called to reset enemy after getting hit
     public void Recovered()
     {
-        agent.enabled = true;
-        rb.isKinematic = true;
+           
         currentState = State.CHASE;
         restirced = false;
+        agent.enabled = true;
         animtor.SetBool("Hit", restirced);
     }
 
     //HIT CODE
     private void OnTriggerEnter(Collider other)
     {
-        
-    }
-    private void OnTriggerExit(Collider other)
-    {
         if (other.gameObject.TryGetComponent<Sword>(out Sword enemy))
         {
             if (enemy.isAtk)
             {
-                restirced = true;
-                agent.enabled = false;
-                rb.isKinematic = false;
-                currentState = State.HIT;
+               // agent.enabled = false;
+                restirced = true;                             
+               
+                currentState = State.HIT;    
                 Hp -= enemy.dmg;
-                Debug.Log(Hp);
+                Vector3 hitDir = new Vector3(enemy.transform.position.x, 1, enemy.transform.position.z);
+                rb.AddForce(hitDir * 32f, ForceMode.Impulse);
+                Debug.Log(player.forward * 1.5f);
             }
 
         }
     }
-
     void Dead()
     {
         Destroy(gameObject);

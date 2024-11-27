@@ -10,4 +10,13 @@ public class EnemyAnimtion : MonoBehaviour
     {
         em.ResetAtk();
     }
+    public void Recovered()
+    {
+        em.Recovered();
+    }
+    public void Attack()
+    {
+        em.Attack();
+    }
+
 }
