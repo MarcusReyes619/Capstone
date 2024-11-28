@@ -70,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     bool hit;
 
     public bool restricted;
+    bool dead = false;
 
     StateMove currentState;
 
@@ -119,6 +120,13 @@ public class PlayerMovement : MonoBehaviour
         {
             if (atkMode) KunaiThrow();
         }
+        //Block
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Block();
+        }
+
+        //Attack Mode
         if (Input.GetKeyDown(KeyCode.T))
         {
             if (!atkMode)
@@ -140,7 +148,7 @@ public class PlayerMovement : MonoBehaviour
     private void MovePlayer()
     {
         //calculate movement Direction
-        if (restricted) return;
+        if (restricted || dead) return;
         moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput; 
 
         //on ground
@@ -204,25 +212,19 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log(atkAnimation);
 
     }
+    void Block()
+    {
+        animator.SetBool("Blocking", true);
+    }
+    public void BlockFinished()
+    {
+        animator.SetBool("Blocking", false);
+    }
     void KunaiThrow()
     {
         Instantiate(kunai, orientation.position, cam.rotation);
        
     }
-
-    public void ResetAttack()
-    {
-        isAtk = false;
-        restricted = false;
-        animator.SetBool("IsAtk", isAtk);
-        //sets the animtior back to zero
-        animator.SetInteger("AtkState", 0);
-    }
-
-
-    #endregion
-
-
     //Kuni Tellopation
     private void KnifeDection()
     {
@@ -235,6 +237,21 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
 
     }
+    public void ResetAttack()
+    {
+        isAtk = false;
+        restricted = false;
+        animator.SetBool("IsAtk", isAtk);
+        //sets the animtior back to zero
+        animator.SetInteger("AtkState", 0);
+    }
+
+
+    
+    #endregion
+
+
+   
 
     #region Hit Methods
 
@@ -249,6 +266,12 @@ public class PlayerMovement : MonoBehaviour
         hit = false;
         restricted = false;
         animator.SetBool("Hit", hit);
+    }
+
+    void Dead()
+    {
+        dead = true;
+        animator.SetBool("Dead", dead);
     }
     #endregion
 
@@ -276,9 +299,10 @@ public class PlayerMovement : MonoBehaviour
                 //looks in the dir that was hit
                 orientation.LookAt(hitDir);
                 playerObj.LookAt(hitDir);
-             
-                //animator.SetBool("Hit", hit);
-                Invoke(nameof(Recovered), 1f);
+
+                if (HP >= 0) HP -= 5;
+                else Dead();
+
             }
         }
     }
@@ -301,6 +325,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update() 
     {
+        
         MyInput();
         SpeedLimit();
         StateHandler();

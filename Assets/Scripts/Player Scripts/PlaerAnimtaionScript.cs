@@ -14,5 +14,14 @@ public class Attacking : MonoBehaviour
     {
         pm.Jump();
     }
+
+    public void Recovered()
+    {
+        pm.Recovered();
+    }
+    public void BlockFinished()
+    {
+        pm.BlockFinished();
+    }
  
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyAttack : MonoBehaviour
 {
-    [SerializeField] AiEnemy em;
+    [SerializeField] public AiEnemy em;
     [SerializeField] BoxCollider collider;
     void Start()
     {

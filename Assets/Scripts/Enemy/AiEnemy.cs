@@ -26,6 +26,7 @@ public class AiEnemy : MonoBehaviour
     public bool playerInSightRange, playerInAtkRange;
 
     bool restirced;
+    public bool stun;
 
     public Animator animtor;
 
@@ -36,6 +37,7 @@ public class AiEnemy : MonoBehaviour
         CHASE,
         ATTACK,
         HIT,
+        STUN,
         DEAD
     }
 
@@ -52,7 +54,7 @@ public class AiEnemy : MonoBehaviour
 
      void Awake()
     {
-        player = GameObject.Find("Player").transform;
+        player = GameObject.Find("Adam base update").transform;
         agent = GetComponent<NavMeshAgent>();
         _rigdollRigidboodies = GetComponentsInChildren<Rigidbody>();
         DisableRagdoll();
@@ -95,6 +97,7 @@ public class AiEnemy : MonoBehaviour
         WhatsTheMove();
 
     }
+    #region Ragdoll Stuff
     //Disables the rigdoll 
     void DisableRagdoll()
     {
@@ -111,7 +114,7 @@ public class AiEnemy : MonoBehaviour
             rig.isKinematic = false;
         }
     }
-
+    #endregion
 
     //checks the current state and does stuff depending on the state
     void WhatsTheMove()
@@ -153,18 +156,23 @@ public class AiEnemy : MonoBehaviour
             //Atk
             case (State.ATTACK):
                 agent.SetDestination(transform.position);
-                Vector3 lookHere = new Vector3(player.position.x, 0, player.position.z);
-                //transform.LookAt(lookHere);
-                //Atk code here
-                if (!isAtk)Attack();
-                animtor.SetBool("Atk", isAtk);
+                Vector3 lookHere = new Vector3(player.position.x, 1, player.position.z);
+                transform.LookAt(lookHere);
+                //Atk code called in the animotr
+                if (!isAtk)animtor.SetBool("Atk", true);
                 Invoke(nameof(ResetAtk), 1f);      
                 break;
 
             //HIT
             case (State.HIT):
+                isAtk = false;
                 animtor.SetBool("Hit", restirced);       
-                break;       
+                break;
+            //STUN
+            case (State.STUN):
+                restirced = true;
+
+                break;
             //Dead
             case (State.DEAD):
                 animtor.enabled = false;
@@ -179,6 +187,7 @@ public class AiEnemy : MonoBehaviour
       
    
     }
+    #region Attack
     public void Attack()
     {
         isAtk = true;
@@ -192,14 +201,15 @@ public class AiEnemy : MonoBehaviour
         restirced = false;
         animtor.SetBool("Atk", isAtk);
     }
+    #endregion
+
+    #region Hit
 
     //called to reset enemy after getting hit
     public void Recovered()
-    {
-           
+    {  
         currentState = State.CHASE;
-        restirced = false;
-        agent.enabled = true;
+        restirced = false;     
         animtor.SetBool("Hit", restirced);
     }
 
@@ -211,17 +221,30 @@ public class AiEnemy : MonoBehaviour
             if (enemy.isAtk)
             {
                // agent.enabled = false;
-                restirced = true;                             
-               
+                restirced = true;                               
                 currentState = State.HIT;    
                 Hp -= enemy.dmg;
                 Vector3 hitDir = new Vector3(enemy.transform.position.x, 1, enemy.transform.position.z);
                 rb.AddForce(hitDir * 32f, ForceMode.Impulse);
-                Debug.Log(player.forward * 1.5f);
+                if (stun)
+                {
+                    stun = false;
+                    animtor.SetBool("Stun", stun);
+                }
             }
 
         }
     }
+    #endregion 
+
+    public void Stun()
+    {
+        stun = true;
+        animtor.SetBool("Stunned", stun);
+        currentState = State.STUN;
+    }
+
+
     void Dead()
     {
         Destroy(gameObject);
