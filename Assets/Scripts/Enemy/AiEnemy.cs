@@ -225,12 +225,8 @@ public class AiEnemy : MonoBehaviour
                 currentState = State.HIT;    
                 Hp -= enemy.dmg;
                 Vector3 hitDir = new Vector3(enemy.transform.position.x, 1, enemy.transform.position.z);
-                rb.AddForce(hitDir * 32f, ForceMode.Impulse);
-                if (stun)
-                {
-                    stun = false;
-                    animtor.SetBool("Stun", stun);
-                }
+                rb.AddForce(hitDir * 5f, ForceMode.Impulse);
+             
             }
 
         }
@@ -240,10 +236,17 @@ public class AiEnemy : MonoBehaviour
     public void Stun()
     {
         stun = true;
+        restirced = true;
         animtor.SetBool("Stunned", stun);
         currentState = State.STUN;
     }
-
+    public void StunDone()
+    {
+        stun = false;
+        restirced = false;
+        animtor.SetBool("Stunned", stun);
+        currentState = State.CHASE;
+    }
 
     void Dead()
     {

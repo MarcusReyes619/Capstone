@@ -14,6 +14,10 @@ public class EnemyAnimtion : MonoBehaviour
     {
         em.Recovered();
     }
+    public void StunnedRecovered()
+    {
+        em.StunDone();
+    }
     public void Attack()
     {
         em.Attack();

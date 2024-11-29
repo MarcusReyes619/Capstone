@@ -9,6 +9,7 @@ public class Sword : MonoBehaviour
 
     //check if attacking
     public bool isAtk;
+    
 
     void Start()
     {

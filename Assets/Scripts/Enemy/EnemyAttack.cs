@@ -18,5 +18,12 @@ public class EnemyAttack : MonoBehaviour
         if (em.isAtk) collider.isTrigger = true;
         else collider.isTrigger = false;
     }
-    
+    //called by the player if the player is blocking 
+    public void AttackBlocked()
+    {
+        em.Stun();
+    }
+
+
+
 }

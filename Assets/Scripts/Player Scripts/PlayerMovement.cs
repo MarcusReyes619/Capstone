@@ -32,9 +32,7 @@ public class PlayerMovement : MonoBehaviour
     float horizontalInput;
     float verticalInput;
 
-    //Attack
-    public bool isAtk = false;
-    int atkAnimation = 0;
+   
 
     Vector3 moveDir;
 
@@ -63,13 +61,18 @@ public class PlayerMovement : MonoBehaviour
         AIR,
         ATTACK
     }
-
-    bool atkMode = false;
     public bool freeze;
     public bool unlimited;
-    bool hit;
-
     public bool restricted;
+
+
+    //combat
+    bool atkMode = false;
+    bool hit;
+    public bool isAtk = false;
+    int atkAnimation = 0;
+    public bool isBlocking;
+    
     bool dead = false;
 
     StateMove currentState;
@@ -190,7 +193,14 @@ public class PlayerMovement : MonoBehaviour
     }
     #endregion
 
-    #region Attack
+
+    /*
+     All of combat functions are called inside of the animtion event to 
+    the player
+     */
+    #region Combat
+
+    //Attack
     private void Attack()
     {
         atkAnimation++;
@@ -212,12 +222,26 @@ public class PlayerMovement : MonoBehaviour
         Debug.Log(atkAnimation);
 
     }
+    public void ResetAttack()
+    {
+        isAtk = false;
+        restricted = false;
+        animator.SetBool("IsAtk", isAtk);
+        //sets the animtior back to zero
+        animator.SetInteger("AtkState", 0);
+    }
+    //Block
     void Block()
     {
+        isBlocking = true;
+        restricted = true;
         animator.SetBool("Blocking", true);
     }
+
     public void BlockFinished()
     {
+        isBlocking = false;
+        restricted = false;
         animator.SetBool("Blocking", false);
     }
     void KunaiThrow()
@@ -237,14 +261,7 @@ public class PlayerMovement : MonoBehaviour
         Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
 
     }
-    public void ResetAttack()
-    {
-        isAtk = false;
-        restricted = false;
-        animator.SetBool("IsAtk", isAtk);
-        //sets the animtior back to zero
-        animator.SetInteger("AtkState", 0);
-    }
+   
 
 
     
@@ -260,12 +277,14 @@ public class PlayerMovement : MonoBehaviour
         hit = true;
         restricted = true;
         animator.SetBool("Hit", hit);
+        
     }
     public void Recovered()
     {
         hit = false;
         restricted = false;
         animator.SetBool("Hit", hit);
+       
     }
 
     void Dead()
@@ -281,28 +300,36 @@ public class PlayerMovement : MonoBehaviour
         
         if (other.gameObject.tag == "EnemyAtk")
         {
-            if (!hit)
+            other.TryGetComponent<EnemyAttack>(out EnemyAttack emAtk);
+
+            Vector3 hitDir = new Vector3(emAtk.gameObject.transform.position.x, 0, emAtk.gameObject.transform.position.z);
+            
+
+            //looks in the dir that was hit
+            orientation.LookAt(hitDir);
+            playerObj.LookAt(hitDir);
+            if (isBlocking)
             {
+                emAtk.AttackBlocked();
+                Debug.Log("Blocked");
+                return;
+            }
+            if (!hit)
+            {                                         
+                if (emAtk.em.isAtk)
+                {
+                    Hit();
 
-                Debug.Log("I GOT SMAKED");
-                hit = true;
-                other.TryGetComponent<EnemyAttack>(out EnemyAttack em);
-                Hit();
+                    //resets atk in case player was hit mid atk
+                    isAtk = false;
 
-                //resets atk in case player was hit mid atk
-                isAtk = false;
+                    //moves playerway from enemy
+                    rb.AddForce(hitDir * 5f, ForceMode.Impulse);
 
-                //moves playerway from enemy
-                Vector3 hitDir = new Vector3(em.gameObject.transform.position.x, 0, em.gameObject.transform.position.z);
-                rb.AddForce(hitDir * 5f, ForceMode.Impulse);
-
-                //looks in the dir that was hit
-                orientation.LookAt(hitDir);
-                playerObj.LookAt(hitDir);
-
-                if (HP >= 0) HP -= 5;
-                else Dead();
-
+                    if (HP >= 0) HP -= 5;
+                    else Dead();
+                   
+                }
             }
         }
     }
