@@ -257,6 +257,14 @@ public class PlayerMovement : MonoBehaviour
         if (Physics.Raycast(ray, out knifeFound, 50f, knifeLayer))
         {
             Debug.Log(knifeFound.collider.gameObject.name + " Hit");
+            knifeFound.collider.gameObject.TryGetComponent<Kunai>(out Kunai dectedKunai);
+            dectedKunai.light.enabled = true;
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                transform.position = dectedKunai.transform.position;
+                dectedKunai.TelportedTo();
+                
+            }
         }
         Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
 

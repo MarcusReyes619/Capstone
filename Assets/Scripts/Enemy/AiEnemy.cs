@@ -237,6 +237,7 @@ public class AiEnemy : MonoBehaviour
     {
         stun = true;
         restirced = true;
+        isAtk = false;
         animtor.SetBool("Stunned", stun);
         currentState = State.STUN;
     }
