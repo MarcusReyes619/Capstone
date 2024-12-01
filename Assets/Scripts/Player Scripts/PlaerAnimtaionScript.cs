@@ -23,5 +23,13 @@ public class Attacking : MonoBehaviour
     {
         pm.BlockFinished();
     }
+    public void ThrowKunai()
+    {
+        pm.KunaiThrow();
+    }
+    public void ThrowReset()
+    {
+        pm.ResetThrow();
+    }
  
 }

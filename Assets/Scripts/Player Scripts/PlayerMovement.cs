@@ -48,7 +48,9 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask knifeLayer;
     RaycastHit knifeFound;
     public GameObject kunai;
-
+    Kunai kunaiDected;
+    [SerializeField] Transform firepoint;
+    bool thrown;
 
     //ragdoll
    // private Rigidbody[] _rigdollRigidboodies;
@@ -120,13 +122,23 @@ public class PlayerMovement : MonoBehaviour
             if(atkMode && !isAtk) Attack();          
         }
         if (Input.GetButtonDown("Fire2"))
-        {
-            if (atkMode) KunaiThrow();
+        {    
+           animator.SetBool("Throwing", true);   
         }
         //Block
         if (Input.GetKeyDown(KeyCode.E))
         {
             Block();
+        }
+        //Teloport to Kunai
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (kunaiDected != null)
+            {
+                this.transform.position = kunaiDected.transform.position;
+                kunaiDected.TelportedTo();
+            }
+           
         }
 
         //Attack Mode
@@ -204,6 +216,7 @@ public class PlayerMovement : MonoBehaviour
     private void Attack()
     {
         atkAnimation++;
+        playerObj.forward = cam.forward;
         if (!isAtk)
         {    
             if (atkAnimation > 5) atkAnimation = 1;
@@ -218,8 +231,6 @@ public class PlayerMovement : MonoBehaviour
 
             animator.SetInteger("AtkState", atkAnimation);
         }
-
-        Debug.Log(atkAnimation);
 
     }
     public void ResetAttack()
@@ -244,10 +255,21 @@ public class PlayerMovement : MonoBehaviour
         restricted = false;
         animator.SetBool("Blocking", false);
     }
-    void KunaiThrow()
+    public void KunaiThrow()
     {
-        Instantiate(kunai, orientation.position, cam.rotation);
-       
+        //Instanitate kunai to throw
+        if (!thrown)
+        {
+            thrown = true;
+            GameObject projectile = Instantiate(kunai, firepoint.position, cam.rotation);
+
+            //get rb compent
+            Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
+
+            Vector3 addForce = cam.transform.forward * 30f + transform.up * 1f;
+
+            projectileRb.AddForce(addForce, ForceMode.Impulse);
+        }
     }
     //Kuni Tellopation
     private void KnifeDection()
@@ -256,27 +278,27 @@ public class PlayerMovement : MonoBehaviour
 
         if (Physics.Raycast(ray, out knifeFound, 50f, knifeLayer))
         {
-            Debug.Log(knifeFound.collider.gameObject.name + " Hit");
-            knifeFound.collider.gameObject.TryGetComponent<Kunai>(out Kunai dectedKunai);
-            dectedKunai.light.enabled = true;
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                transform.position = dectedKunai.transform.position;
-                dectedKunai.TelportedTo();
-                
-            }
+           
+           knifeFound.collider.gameObject.TryGetComponent<Kunai>(out Kunai kunai);
+           kunaiDected = kunai;
+           kunai.light.enabled = true;
+            
         }
         Debug.DrawRay(cam.transform.position, cam.forward, Color.green);
 
     }
-   
+
+    public void ResetThrow()
+    {
+        thrown = false;
+        animator.SetBool("Throwing", false);
+    }
 
 
-    
     #endregion
 
 
-   
+
 
     #region Hit Methods
 

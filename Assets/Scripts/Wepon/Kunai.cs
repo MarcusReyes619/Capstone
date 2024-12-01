@@ -4,20 +4,31 @@ using UnityEngine;
 
 public class Kunai : MonoBehaviour
 {
-    public Rigidbody rb;
+    private Rigidbody rb;
     [SerializeField] float speed;
     [SerializeField] public Light light;
+    private bool targetHit;
     // Start is called before the first frame update
     void Start()
     {
-        rb.AddForce(transform.forward * speed, ForceMode.Impulse);
-        light.enabled = false;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (targetHit) return;
+        else targetHit = true;
+
+        //makes sure projectile sticks to surface
+        rb.isKinematic = true;
+
+        //make sire projectile moves with traget
+        transform.SetParent(collision.transform);
     }
 
     public void Spotted() 
