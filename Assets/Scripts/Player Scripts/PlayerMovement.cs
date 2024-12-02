@@ -266,7 +266,7 @@ public class PlayerMovement : MonoBehaviour
             //get rb compent
             Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
 
-            Vector3 addForce = cam.transform.forward * 30f + transform.up * 1f;
+            Vector3 addForce = cam.transform.forward * 50f + transform.up * 1f;
 
             projectileRb.AddForce(addForce, ForceMode.Impulse);
         }
