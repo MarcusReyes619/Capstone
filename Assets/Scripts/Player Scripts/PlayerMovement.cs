@@ -216,7 +216,7 @@ public class PlayerMovement : MonoBehaviour
     private void Attack()
     {
         atkAnimation++;
-        playerObj.forward = cam.forward;
+        playerObj.forward = orientation.forward;
         if (!isAtk)
         {    
             if (atkAnimation > 5) atkAnimation = 1;
@@ -392,7 +392,7 @@ public class PlayerMovement : MonoBehaviour
         //ground
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
         animator.SetBool("OnGround", grounded);
-
+     
 
         if (grounded) 
         { 

@@ -20,7 +20,9 @@ public class CutSceneStart : Interactable
     public override void Deactivate()
     {
         base.Deactivate();
+        cutSceneStart.SetActive(false);
         PlayerController.instance.CutSceneCam.SetActive(false);
         PlayerController.instance.thirdPersonCam.SetActive(true);
+        Debug.Log("cutover");
     }
 }

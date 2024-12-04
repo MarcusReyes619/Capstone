@@ -2844,13 +2844,14 @@ MonoBehaviour:
     m_Bits: 128
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 5
-  timeBetweenAtk: 0.5
+  timeBetweenAtk: 1
   isAtk: 0
   attack: {fileID: 4869037503605724419, guid: f5ac711d5487b9543bcae4ae8cdee403, type: 3}
-  sightRange: 5
+  sightRange: 10
   atkRange: 0.5
   playerInSightRange: 0
   playerInAtkRange: 0
+  stun: 0
   animtor: {fileID: 3870656833207513835}
   rb: {fileID: 1946859690713766429}
   Hp: 10
