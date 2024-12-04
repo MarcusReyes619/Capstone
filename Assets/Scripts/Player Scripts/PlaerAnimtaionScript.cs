@@ -31,5 +31,9 @@ public class Attacking : MonoBehaviour
     {
         pm.ResetThrow();
     }
+    public void ThrowHelper()
+    {
+        pm.animator.SetBool("Throwing", false);
+    }
  
 }

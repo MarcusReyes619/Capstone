@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2228443678937635094}
   - component: {fileID: 7635002343617540992}
   - component: {fileID: 13273505355699028}
+  - component: {fileID: 8288789413570473779}
   m_Layer: 6
   m_Name: Build_G-Left
   m_TagString: Untagged
@@ -112,11 +113,32 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 304125dc564333d4598543ef0fa739ef, type: 3}
+--- !u!65 &8288789413570473779
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 167605781292546888}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1393247, y: 0.067649946, z: 0.11920903}
+  m_Center: {x: 0.03944365, y: 0.023654642, z: 0.059604514}
 --- !u!1 &1860804276523813610
 GameObject:
   m_ObjectHideFlags: 0

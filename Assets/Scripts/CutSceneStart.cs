@@ -9,6 +9,7 @@ using UnityEngine.Timeline;
 public class CutSceneStart : Interactable
 {
     [SerializeField] GameObject cutSceneStart;
+    [SerializeField] GameObject spawnEniemes;
     public override void Activate()
     {
         base.Activate();
@@ -21,8 +22,14 @@ public class CutSceneStart : Interactable
     {
         base.Deactivate();
         cutSceneStart.SetActive(false);
+        spawnEniemes.SetActive(true);
         PlayerController.instance.CutSceneCam.SetActive(false);
         PlayerController.instance.thirdPersonCam.SetActive(true);
         Debug.Log("cutover");
+    }
+
+    public void SpawnEnemies()
+    {
+        
     }
 }

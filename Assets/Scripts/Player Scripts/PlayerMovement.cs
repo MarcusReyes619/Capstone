@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float HP;
 
-
+    [SerializeField] MeshRenderer sword;
     //RayCast
     public LayerMask knifeLayer;
     RaycastHit knifeFound;
@@ -78,6 +78,10 @@ public class PlayerMovement : MonoBehaviour
     bool dead = false;
 
     StateMove currentState;
+
+    //Audio
+    [SerializeField] AudioClip swordSlash;
+    [SerializeField] AudioSource audioSource;
 
     private void StateHandler()
     {
@@ -146,12 +150,15 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!atkMode)
             {
+                
                 atkMode = true;
+                sword.enabled = true;
                 animator.SetBool("AttackMode", true);
             }
             else
             {
                 animator.SetBool("AttackMode", false);
+                sword.enabled = false;
                 atkMode = false;
             }
         }
@@ -230,6 +237,7 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(forcedApplyed, ForceMode.Impulse); 
 
             animator.SetInteger("AtkState", atkAnimation);
+            audioSource.PlayOneShot(swordSlash);
         }
 
     }
@@ -376,7 +384,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-        
+        sword.enabled = false;
     }
 
     // Update is called once per frame

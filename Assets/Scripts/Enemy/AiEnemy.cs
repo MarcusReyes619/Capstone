@@ -31,6 +31,9 @@ public class AiEnemy : MonoBehaviour
     public Animator animtor;
 
     public Rigidbody rb;
+
+    [SerializeField]AudioSource audioSource;
+    [SerializeField]AudioClip hitNose;
     enum State
     {
         PORTAL,
@@ -170,6 +173,7 @@ public class AiEnemy : MonoBehaviour
                 break;
             //STUN
             case (State.STUN):
+                agent.SetDestination(this.transform.position);
                 restirced = true;
 
                 break;
@@ -192,6 +196,7 @@ public class AiEnemy : MonoBehaviour
     {
         isAtk = true;
         restirced = true;
+       
     }
 
 
@@ -220,13 +225,13 @@ public class AiEnemy : MonoBehaviour
         {
             if (enemy.isAtk)
             {
-               // agent.enabled = false;
+                agent.SetDestination(this.transform.position);
                 restirced = true;                               
                 currentState = State.HIT;    
                 Hp -= enemy.dmg;
-                Vector3 hitDir = new Vector3(enemy.transform.position.x, 1, enemy.transform.position.z);
-                rb.AddForce(hitDir * 5f, ForceMode.Impulse);
-             
+                // Vector3 hitDir = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z);
+                //rb.AddForce(hitDir * 2f, ForceMode.Impulse);
+                audioSource.PlayOneShot(hitNose);
             }
 
         }
@@ -239,6 +244,7 @@ public class AiEnemy : MonoBehaviour
         restirced = true;
         isAtk = false;
         animtor.SetBool("Stunned", stun);
+        agent.SetDestination(transform.position);
         currentState = State.STUN;
     }
     public void StunDone()

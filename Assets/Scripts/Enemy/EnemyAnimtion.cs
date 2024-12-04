@@ -18,6 +18,7 @@ public class EnemyAnimtion : MonoBehaviour
     {
         em.StunDone();
     }
+   
     public void Attack()
     {
         em.Attack();
