@@ -81,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
 
     //Audio
     [SerializeField] AudioClip swordSlash;
+    [SerializeField] AudioClip stepNoise;
     [SerializeField] AudioSource audioSource;
 
     private void StateHandler()
@@ -139,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (kunaiDected != null)
             {
-                this.transform.position = kunaiDected.transform.position;
+                this.transform.position = kunaiDected.transform.position + new Vector3(0,1.4f,0);
                 kunaiDected.TelportedTo();
             }
            
@@ -209,6 +210,11 @@ public class PlayerMovement : MonoBehaviour
         readyToJump = true;
         animator.SetBool("Jump", false);
 
+    }
+
+    public void PlayStep()
+    {
+        audioSource.PlayOneShot(stepNoise);
     }
     #endregion
 
@@ -284,7 +290,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Ray ray = new Ray(cam.transform.position, cam.forward);
 
-        if (Physics.Raycast(ray, out knifeFound, 50f, knifeLayer))
+        if (Physics.Raycast(ray, out knifeFound, 150f, knifeLayer))
         {
            
            knifeFound.collider.gameObject.TryGetComponent<Kunai>(out Kunai kunai);

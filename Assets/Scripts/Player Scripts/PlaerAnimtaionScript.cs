@@ -35,5 +35,9 @@ public class Attacking : MonoBehaviour
     {
         pm.animator.SetBool("Throwing", false);
     }
+    public void PlayStep()
+    {
+        pm.PlayStep();
+    }
  
 }
