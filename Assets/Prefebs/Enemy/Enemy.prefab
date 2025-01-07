@@ -2221,7 +2221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fcffd8a2324de240830fdaf34ee171b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  em: {fileID: 4568383805726771358}
+  animator: {fileID: 3870656833207513835}
+  attack: {fileID: 5543817357977407196}
 --- !u!1 &5543817357977407196
 GameObject:
   m_ObjectHideFlags: 0
@@ -2232,14 +2233,13 @@ GameObject:
   m_Component:
   - component: {fileID: 6574222646823049928}
   - component: {fileID: 290096594817947108}
-  - component: {fileID: 2663535805650761434}
   m_Layer: 0
   m_Name: Attack
   m_TagString: EnemyAtk
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6574222646823049928
 Transform:
   m_ObjectHideFlags: 0
@@ -2276,20 +2276,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 1.14, z: 0.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2663535805650761434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5543817357977407196}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1fdba859ce365643ba6bb86864bf119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  em: {fileID: 4568383805726771358}
-  collider: {fileID: 290096594817947108}
 --- !u!1 &5846209312360701960
 GameObject:
   m_ObjectHideFlags: 0
@@ -2845,15 +2831,10 @@ MonoBehaviour:
     m_Bits: 128
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 5
-  timeBetweenAtk: 1
-  isAtk: 0
-  attack: {fileID: 4869037503605724419, guid: f5ac711d5487b9543bcae4ae8cdee403, type: 3}
   sightRange: 10
   atkRange: 0.5
-  playerInSightRange: 0
-  playerInAtkRange: 0
   stun: 0
-  animtor: {fileID: 3870656833207513835}
+  enemyAnimtion: {fileID: 611595548654617786}
   rb: {fileID: 1946859690713766429}
   audioSource: {fileID: 9178443593184967136}
   hitNose: {fileID: 8300000, guid: 5ac2d3cd9fdc70646b2b5547c9611740, type: 3}

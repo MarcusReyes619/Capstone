@@ -5,30 +5,28 @@ using UnityEngine.AI;
 
 public class AiEnemy : MonoBehaviour
 {
-    public NavMeshAgent agent;
+    [SerializeField] protected NavMeshAgent agent;
+    [SerializeField] protected Transform player;
+    [SerializeField] protected Transform obj;
 
-    public Transform player;
-    public Transform obj;
-
-    public LayerMask whatIsGround, whatIsPlayer;
+    [SerializeField] protected LayerMask whatIsGround, whatIsPlayer;
 
     //Patroling 
-    public Vector3 walkPoint;
-    bool walkPointSet;
-    public float walkPointRange;
+    [SerializeField] Vector3 walkPoint;
+    protected bool walkPointSet;
+    [SerializeField] float walkPointRange;
 
-    //Attacks
-    public float timeBetweenAtk;
-    public bool isAtk;
-    public GameObject attack;
+    //Attacks   
+    bool isAtk;
+    GameObject attack;
     //States
-    public float sightRange, atkRange;
-    public bool playerInSightRange, playerInAtkRange;
+    [SerializeField] protected float sightRange, atkRange;
+     protected bool playerInSightRange, playerInAtkRange;
 
     bool restirced;
     public bool stun;
 
-    public Animator animtor;
+    [SerializeField] EnemyAnimtion enemyAnimtion;
 
     public Rigidbody rb;
 
@@ -55,7 +53,7 @@ public class AiEnemy : MonoBehaviour
     public float Hp;
 
 
-     void Awake()
+    protected virtual void Awake()
     {
         player = GameObject.Find("Adam base update").transform;
         agent = GetComponent<NavMeshAgent>();
@@ -63,10 +61,10 @@ public class AiEnemy : MonoBehaviour
         DisableRagdoll();
     }
 
-   
+
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         rb.freezeRotation = true;
         rb.isKinematic = false;
@@ -74,11 +72,12 @@ public class AiEnemy : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         
         if (Hp > 0)
         {
+            
             //Check for player in sight and in range
             playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
             playerInAtkRange = Physics.CheckSphere(transform.position, atkRange, whatIsPlayer);
@@ -86,23 +85,25 @@ public class AiEnemy : MonoBehaviour
             //Change State
             if (!restirced)
             {
-                if (!playerInSightRange && !playerInAtkRange) currentState = State.PORTAL;
-                if (playerInSightRange && !playerInAtkRange) currentState = State.CHASE;
-                if (playerInSightRange && playerInAtkRange) currentState = State.ATTACK;
-            }          
-            
-            
+                if (!playerInSightRange && !playerInAtkRange) Portal();
+                if (playerInSightRange && !playerInAtkRange) Chase();
+                if (playerInSightRange && playerInAtkRange) Attack();
+            }
+
+            //sets the agents movement animation
+            enemyAnimtion.Moving(agent.velocity.magnitude);
+
         }
         else
         {
             currentState = State.DEAD;
         }
-        WhatsTheMove();
+       // WhatsTheMove();
 
     }
     #region Ragdoll Stuff
     //Disables the rigdoll 
-    void DisableRagdoll()
+    protected virtual void DisableRagdoll()
     {
         foreach(var rig in _rigdollRigidboodies)
         {
@@ -110,7 +111,7 @@ public class AiEnemy : MonoBehaviour
         }
     }
     //enable rigdoll 
-    void EnableRagdoll()
+    protected virtual void EnableRagdoll()
     {
         foreach (var rig in _rigdollRigidboodies)
         {
@@ -119,92 +120,68 @@ public class AiEnemy : MonoBehaviour
     }
     #endregion
 
-    //checks the current state and does stuff depending on the state
-    void WhatsTheMove()
+    #region AI States
+    protected virtual void Portal()
     {
-        //Potral
-        switch (currentState)
+        currentState = State.PORTAL;
+        if (!walkPointSet)
         {
-            //Portal
-            case (State.PORTAL):
-                if (!walkPointSet)
-                {
-                    //cal Random point in range
-                    float randomZ = Random.Range(-walkPointRange, walkPointRange);
-                    float randomX = Random.Range(-walkPointRange, walkPointRange);
+            //cal Random point in range
+            float randomZ = Random.Range(-walkPointRange, walkPointRange);
+            float randomX = Random.Range(-walkPointRange, walkPointRange);
 
-                    walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
+            walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
-                    //Checks if walk point is on ground
-                    if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)) walkPointSet = true;
-                }
-
-                if (walkPointSet)
-                {
-                    agent.SetDestination(walkPoint);
-                }            
-
-                //checks if agent reached its destination
-                Vector3 distanceToWalkToPoint = transform.position - walkPoint;
-                if (distanceToWalkToPoint.magnitude < 1f) walkPointSet = false;
-                animtor.SetFloat("Speed", agent.velocity.magnitude);
-
-                break;
-
-            //Chase
-            case (State.CHASE):
-                agent.SetDestination(player.position);
-                break;
-
-            //Atk
-            case (State.ATTACK):
-                agent.SetDestination(transform.position);
-                Vector3 lookHere = new Vector3(player.position.x, 1, player.position.z);
-                transform.LookAt(lookHere);
-                //Atk code called in the animotr
-                if (!isAtk)animtor.SetBool("Atk", true);
-                Invoke(nameof(ResetAtk), 1f);      
-                break;
-
-            //HIT
-            case (State.HIT):
-                isAtk = false;
-                animtor.SetBool("Hit", restirced);       
-                break;
-            //STUN
-            case (State.STUN):
-                agent.SetDestination(this.transform.position);
-                restirced = true;
-
-                break;
-            //Dead
-            case (State.DEAD):
-                animtor.enabled = false;
-                EnableRagdoll();
-               rb.velocity = Vector3.zero;
-                rb.isKinematic = false;
-                 
-          
-                Invoke(nameof(Dead), 10f);
-                break;
+            //Checks if walk point is on ground
+            if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)) walkPointSet = true;
         }
-      
+
+        if (walkPointSet)
+        {
+            currentState = State.CHASE;
+            agent.SetDestination(walkPoint);
    
+        }
+
+        //checks if agent reached its destination
+        Vector3 distanceToWalkToPoint = transform.position - walkPoint;
+        if (distanceToWalkToPoint.magnitude < 1f) walkPointSet = false;
     }
-    #region Attack
-    public void Attack()
+
+    protected virtual void Chase()
     {
+        currentState = State.CHASE;
+        agent.SetDestination(player.position);
+    }
+
+    protected virtual void Attack()
+    {
+        currentState = State.ATTACK;
+
+        agent.SetDestination(transform.position);
+        Vector3 lookHere = new Vector3(player.position.x, 1, player.position.z);
+        transform.LookAt(lookHere);
+
         isAtk = true;
         restirced = true;
-       
+        enemyAnimtion.Attack();
+
     }
+    #endregion
+
+    #region Attack
+    //protected virtual void Attack()
+    //{
+  
+       
+    //}
 
 
     public void ResetAtk()
     {
         isAtk = false;
         restirced = false;
-        animtor.SetBool("Atk", isAtk);
+        
     }
     #endregion
 
@@ -215,24 +192,23 @@ public class AiEnemy : MonoBehaviour
     {  
         currentState = State.CHASE;
         restirced = false;     
-        animtor.SetBool("Hit", restirced);
+      
     }
 
     //HIT CODE
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent<Sword>(out Sword enemy))
+        if (other.gameObject.tag == "Sword")
         {
-            if (enemy.isAtk)
-            {
-                agent.SetDestination(this.transform.position);
+                
                 restirced = true;                               
                 currentState = State.HIT;    
-                Hp -= enemy.dmg;
-                // Vector3 hitDir = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z);
-                //rb.AddForce(hitDir * 2f, ForceMode.Impulse);
-                audioSource.PlayOneShot(hitNose);
-            }
+                
+            // Vector3 hitDir = new Vector3(enemy.transform.position.x, 0, enemy.transform.position.z);
+            //rb.AddForce(hitDir * 2f, ForceMode.Impulse);
+            enemyAnimtion.Hit();
+            audioSource.PlayOneShot(hitNose);
+            
 
         }
     }
@@ -243,7 +219,7 @@ public class AiEnemy : MonoBehaviour
         stun = true;
         restirced = true;
         isAtk = false;
-        animtor.SetBool("Stunned", stun);
+        
         agent.SetDestination(transform.position);
         currentState = State.STUN;
     }
@@ -251,13 +227,22 @@ public class AiEnemy : MonoBehaviour
     {
         stun = false;
         restirced = false;
-        animtor.SetBool("Stunned", stun);
+        
         currentState = State.CHASE;
     }
 
     void Dead()
     {
         Destroy(gameObject);
+        EnableRagdoll();
+        rb.velocity = Vector3.zero;
+        rb.isKinematic = false;
+        Invoke(nameof(Dead), 10f);
+    }
+
+    public virtual void ApplyDmg()
+    {
+
     }
 
     private void OnDrawGizmos()

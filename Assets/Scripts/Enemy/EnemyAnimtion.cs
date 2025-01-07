@@ -4,24 +4,57 @@ using UnityEngine;
 
 public class EnemyAnimtion : MonoBehaviour
 {
-    [SerializeField] AiEnemy em;
-   
+    [SerializeField] Animator animator;
+    AiEnemy enemy;
+    [SerializeField] GameObject attack;
+    private void Start()
+    {
+        enemy = GetComponent<AiEnemy>();
+    }
+
+    public void Moving(float moveSpeed)
+    {
+        animator.SetFloat("Speed", moveSpeed);
+        
+    }
+    public void Attack()
+    {
+        attack.SetActive(true);
+        animator.SetBool("Atk", true);
+    }
+
     public void ResetAtackAnmation()
     {
-        em.ResetAtk();
+        enemy.ResetAtk();
+        attack.SetActive(false);
+        animator.SetBool("Atk", false);
+    }
+
+    public void Hit()
+    {
+       
+        animator.SetBool("Hit", true);
     }
     public void Recovered()
     {
-        em.Recovered();
+        enemy.Recovered();
+        animator.SetBool("Hit", false);
+    }
+    public void Stunned()
+    {
+        animator.SetBool("Stunend", true);
+
     }
     public void StunnedRecovered()
     {
-        em.StunDone();
+        animator.SetBool("Stunend", false);
+        enemy.StunDone();
     }
-   
-    public void Attack()
+    
+    public void Dead()
     {
-        em.Attack();
+        animator.enabled = false;
     }
+    
 
 }

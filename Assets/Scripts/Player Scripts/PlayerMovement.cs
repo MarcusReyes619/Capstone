@@ -339,44 +339,44 @@ public class PlayerMovement : MonoBehaviour
     #endregion
 
     #region unity Functions
-    private void OnTriggerEnter(Collider other)
-    {
+    //private void OnTriggerEnter(Collider other)
+    //{
         
-        if (other.gameObject.tag == "EnemyAtk")
-        {
-            other.TryGetComponent<EnemyAttack>(out EnemyAttack emAtk);
-
-            Vector3 hitDir = new Vector3(emAtk.gameObject.transform.position.x, 0, emAtk.gameObject.transform.position.z);
+    //    if (other.gameObject.tag == "EnemyAtk")
+    //    {
+    //        other.TryGetComponent<EnemyAttack>(out EnemyAttack emAtk);
             
 
-            //looks in the dir that was hit
-            orientation.LookAt(hitDir);
-            playerObj.LookAt(hitDir);
-            if (isBlocking)
-            {
-                emAtk.AttackBlocked();
-                Debug.Log("Blocked");
-                return;
-            }
-            if (!hit)
-            {                                         
-                if (emAtk.em.isAtk)
-                {
-                    Hit();
+    //        Vector3 hitDir = new Vector3(emAtk.gameObject.transform.position.x, 0, emAtk.gameObject.transform.position.z);
+            
 
-                    //resets atk in case player was hit mid atk
-                    isAtk = false;
+    //        //looks in the dir that was hit
+    //        orientation.LookAt(hitDir);
+    //        playerObj.LookAt(hitDir);
+    //        if (isBlocking)
+    //        {
+                
+    //            Debug.Log("Blocked");
+    //            return;
+    //        }
+    //        if (!hit)
+    //        {                                         
+                
+    //                Hit();
 
-                    //moves playerway from enemy
-                    rb.AddForce(hitDir * 5f, ForceMode.Impulse);
+    //                //resets atk in case player was hit mid atk
+    //                isAtk = false;
 
-                    if (HP >= 0) HP -= 5;
-                    else Dead();
+    //                //moves playerway from enemy
+    //                rb.AddForce(hitDir * 5f, ForceMode.Impulse);
+
+    //                if (HP >= 0) HP -= 5;
+    //                else Dead();
                    
-                }
-            }
-        }
-    }
+                
+    //        }
+    //    }
+    //}
     
 
     private void Awake()
