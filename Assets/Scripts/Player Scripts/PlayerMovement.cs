@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -105,13 +106,18 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = moveSpeed;      
     }
 
-    private void MyInput() 
+    private void OnMove(InputValue value) 
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
+        //horizontalInput = Input.GetAxisRaw("Horizontal");
+        //verticalInput = Input.GetAxisRaw("Vertical");
+
+        horizontalInput = value.Get<Vector2>().x;
+        verticalInput = value.Get<Vector2>().y;
+        
+       
 
         //Jump
-        if(Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
+        if (Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
         {
 
             animator.SetBool("Jump", true);
@@ -181,7 +187,8 @@ public class PlayerMovement : MonoBehaviour
         else if(!grounded) rb.AddForce(moveDir.normalized * currentSpeed * 10f * airMultipiler, ForceMode.Force);
 
         //Calculate forward dirction vector
-        animator.SetFloat("Speed", rb.velocity.magnitude);  
+        animator.SetFloat("Speed", rb.velocity.magnitude);
+       
 
     }
 
@@ -397,7 +404,7 @@ public class PlayerMovement : MonoBehaviour
     void Update() 
     {
         
-        MyInput();
+        //MyInput();
         SpeedLimit();
         StateHandler();
         KnifeDection();

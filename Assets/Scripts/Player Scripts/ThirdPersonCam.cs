@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ThirdPersonCam : MonoBehaviour
 {
@@ -10,7 +11,9 @@ public class ThirdPersonCam : MonoBehaviour
     [SerializeField] public Rigidbody rb;
 
     public float rotationSpeed;
-    
+
+    //float horizontalInput;
+    //float verticalInput;
 
 
     // Start is called before the first frame update
@@ -20,6 +23,13 @@ public class ThirdPersonCam : MonoBehaviour
         Cursor.visible = false;
     }
 
+    //void OnCamMove(InputValue value)
+    //{
+    //    horizontalInput = value.Get<Vector2>().x;
+    //    verticalInput = value.Get<Vector2>().y;
+    //    Debug.Log(horizontalInput);
+    //    Debug.Log(verticalInput);
+    //}
     // Update is called once per frame
     void Update()
     {
@@ -30,6 +40,9 @@ public class ThirdPersonCam : MonoBehaviour
         //roate player object
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
+       
+
         Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if (inputDir != Vector3.zero) playerObj.forward = Vector3.Slerp(playerObj.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
