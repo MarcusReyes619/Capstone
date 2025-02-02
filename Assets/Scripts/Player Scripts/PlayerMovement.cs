@@ -106,6 +106,42 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = moveSpeed;      
     }
 
+    private void OnJump(InputValue value)
+    {
+        if (readyToJump && grounded && currentState != StateMove.AIR)
+        {
+
+            animator.SetBool("Jump", true);
+            Jump();
+            readyToJump = false;
+
+            Invoke(nameof(ResetJump), jumpCoolDown);
+
+        }
+    }
+    private void OnAttack(InputValue value)
+    {
+        atkMode = true;
+        if (atkMode && !isAtk) Attack();
+    }
+    private void OnKuni(InputValue value)
+    {
+        animator.SetBool("Throwing", true);
+    }
+
+    private void OnBlock(InputValue value)
+    {
+        Block();
+    }
+    private void OnTP(InputValue value)
+    {
+        if (kunaiDected != null)
+        {
+            this.transform.position = kunaiDected.transform.position + new Vector3(0, 1.4f, 0);
+            kunaiDected.TelportedTo();
+        }
+    }
+
     private void OnMove(InputValue value) 
     {
         //horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -114,50 +150,21 @@ public class PlayerMovement : MonoBehaviour
         horizontalInput = value.Get<Vector2>().x;
         verticalInput = value.Get<Vector2>().y;
         
-       
-
-        //Jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded && currentState != StateMove.AIR)
-        {
-
-            animator.SetBool("Jump", true);
-            //Jump();
-            readyToJump = false;
-        
-            Invoke(nameof(ResetJump), jumpCoolDown);
-
-        }
-        //Attack
-        if (Input.GetButtonDown("Fire1"))
-        {
-            if(atkMode && !isAtk) Attack();          
-        }
-        if (Input.GetButtonDown("Fire2"))
-        {    
-           animator.SetBool("Throwing", true);   
-        }
-        //Block
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Block();
-        }
-        //Teloport to Kunai
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (kunaiDected != null)
-            {
-                this.transform.position = kunaiDected.transform.position + new Vector3(0,1.4f,0);
-                kunaiDected.TelportedTo();
-            }
-           
-        }
 
         //Attack Mode
+        
+
+    }
+
+    #region Movement
+
+    private void MovePlayer()
+    {
         if (Input.GetKeyDown(KeyCode.T))
         {
             if (!atkMode)
             {
-                
+
                 atkMode = true;
                 sword.enabled = true;
                 animator.SetBool("AttackMode", true);
@@ -169,13 +176,6 @@ public class PlayerMovement : MonoBehaviour
                 atkMode = false;
             }
         }
-
-    }
-
-    #region Movement
-
-    private void MovePlayer()
-    {
         //calculate movement Direction
         if (restricted || dead) return;
         moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput; 
