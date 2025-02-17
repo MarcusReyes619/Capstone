@@ -58,8 +58,8 @@ public class LedgeGrabbing : MonoBehaviour
     }
     private void OnDrawGizmosSelected()
     {
-        //Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
-        //Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
+        Vector3 SphareCast = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
+        Gizmos.DrawWireSphere(SphareCast, ledgeSphereCastRadius);
        
     }
 
@@ -157,13 +157,7 @@ public class LedgeGrabbing : MonoBehaviour
         ExitLedgeHold();
         Invoke(nameof(DelayedJumpForce), 0.05f);
 
-        //float horizontalInput = Input.GetAxisRaw("Horizontal");
-        //float verticalInput = Input.GetAxisRaw("Vertical");
-        //Vector3 moveDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        //Vector3 forceToAdd = moveDir * ledgeJumpForwardForce + orientation.up * ledgeJumpUpwardForce;
-        //rb.velocity = Vector3.zero;
-        //rb.AddForce(forceToAdd, ForceMode.Impulse);
-
+    
         
     }
 

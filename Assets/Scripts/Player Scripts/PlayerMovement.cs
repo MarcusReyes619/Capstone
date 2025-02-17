@@ -59,6 +59,7 @@ public class PlayerMovement : MonoBehaviour
     {
         FREEZE,
         RUNNING,
+        CLIMBING,
         UNLIMITED,
         Hit,
         AIR,
