@@ -26,7 +26,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("GroundCheck")]
     public float playerHeight;
     public LayerMask whatIsGround;
-    bool grounded;
+    public bool grounded;
 
     public Transform orientation;
 
@@ -75,7 +75,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isAtk = false;
     int atkAnimation = 0;
     public bool isBlocking;
-    
+    float atkTimer = 5f;
+
     bool dead = false;
 
     StateMove currentState;
@@ -106,6 +107,7 @@ public class PlayerMovement : MonoBehaviour
             currentSpeed = moveSpeed;      
     }
 
+    #region controller input functions
     private void OnJump(InputValue value)
     {
         if (readyToJump && grounded && currentState != StateMove.AIR)
@@ -122,6 +124,8 @@ public class PlayerMovement : MonoBehaviour
     private void OnAttack(InputValue value)
     {
         atkMode = true;
+        animator.SetBool("AttackMode", atkMode);
+        sword.enabled = true;
         if (atkMode && !isAtk) Attack();
     }
     private void OnKuni(InputValue value)
@@ -141,6 +145,7 @@ public class PlayerMovement : MonoBehaviour
             kunaiDected.TelportedTo();
         }
     }
+    #endregion
 
     private void OnMove(InputValue value) 
     {
@@ -191,7 +196,6 @@ public class PlayerMovement : MonoBehaviour
        
 
     }
-
     private void SpeedLimit()
     {
         Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -235,6 +239,7 @@ public class PlayerMovement : MonoBehaviour
     //Attack
     private void Attack()
     {
+        atkTimer = 5f;
         atkAnimation++;
         playerObj.forward = orientation.forward;
         if (!isAtk)
@@ -261,6 +266,24 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("IsAtk", isAtk);
         //sets the animtior back to zero
         animator.SetInteger("AtkState", 0);
+    }
+
+    void NotAttacking()
+    {
+        if (atkTimer > 0)
+        {
+            atkTimer -= Time.deltaTime;
+
+        }
+        else
+        {
+            ResetAttack();
+            atkMode = false;
+            animator.SetBool("AttackMode", false);
+            sword.enabled = false;
+            
+        }            
+
     }
     //Block
     void Block()
@@ -408,7 +431,7 @@ public class PlayerMovement : MonoBehaviour
         SpeedLimit();
         StateHandler();
         KnifeDection();
-        
+        NotAttacking();
 
         //ground
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);

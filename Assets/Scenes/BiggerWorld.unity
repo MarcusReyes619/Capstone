@@ -2095,7 +2095,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 48753356}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &25182634
+--- !u!114 &25182632
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4462,39 +4462,39 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8177738067418392360, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2119798780}
+      addedObject: {fileID: 2119798778}
     - targetCorrespondingSourceObject: {fileID: 8200843233117909531, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2111272099}
+      addedObject: {fileID: 2111272096}
     - targetCorrespondingSourceObject: {fileID: 8200843233117909531, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2111272098}
+      addedObject: {fileID: 2111272095}
     - targetCorrespondingSourceObject: {fileID: 5906706752178315499, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1676122172}
+      addedObject: {fileID: 1676122170}
     - targetCorrespondingSourceObject: {fileID: 6593806777596871552, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1273343311}
+      addedObject: {fileID: 1273343308}
     - targetCorrespondingSourceObject: {fileID: 6593806777596871552, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1273343310}
+      addedObject: {fileID: 1273343307}
     - targetCorrespondingSourceObject: {fileID: 7650237259066472420, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 25182634}
+      addedObject: {fileID: 25182632}
     - targetCorrespondingSourceObject: {fileID: 1742814442224219991, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1306160780}
+      addedObject: {fileID: 1306160777}
     - targetCorrespondingSourceObject: {fileID: 1742814442224219991, guid: 4e2f9772315d326498b2b9d98429c9a8,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1306160779}
+      addedObject: {fileID: 1306160776}
   m_SourcePrefab: {fileID: 100100000, guid: 4e2f9772315d326498b2b9d98429c9a8, type: 3}
 --- !u!1 &52776934
 GameObject:
@@ -9778,7 +9778,7 @@ PrefabInstance:
     - target: {fileID: 3204053737725670478, guid: a33daea3ce019344b9cb31f1efd5b31e,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3204053737725670478, guid: a33daea3ce019344b9cb31f1efd5b31e,
         type: 3}
@@ -9877,6 +9877,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1201858470}
+    - targetCorrespondingSourceObject: {fileID: 6506246302249918385, guid: a33daea3ce019344b9cb31f1efd5b31e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1201858475}
   m_SourcePrefab: {fileID: 100100000, guid: a33daea3ce019344b9cb31f1efd5b31e, type: 3}
 --- !u!54 &324654702 stripped
 Rigidbody:
@@ -29958,7 +29962,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 324654701}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1201858466}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 155e644ef884b9844abd7a58a553022c, type: 3}
   m_Name: 
@@ -29979,6 +29983,23 @@ MonoBehaviour:
   thridPcam: {fileID: 1520322205}
   thirdPersonCam: {fileID: 1693693354}
   CutSceneCam: {fileID: 1205059270}
+--- !u!114 &1201858475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201858466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 233456f14e30e334e8778386b38da57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isClimbing: 1
+  rayAmount: 10
+  rayLenght: 0.5
+  rayOffset: 0.15
+  rayHeight: 1.7
 --- !u!1001 &1203322468
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31129,7 +31150,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 48753356}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1273343310
+--- !u!114 &1273343307
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31156,7 +31177,7 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &1273343311
+--- !u!114 &1273343308
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31168,8 +31189,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2, z: -7}
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 0, z: -10}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -31843,7 +31864,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 48753356}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1306160779
+--- !u!114 &1306160776
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31870,7 +31891,7 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &1306160780
+--- !u!114 &1306160777
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -31882,8 +31903,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2, z: -7}
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 0, z: -10}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -38549,9 +38570,9 @@ MonoBehaviour:
     m_Radius: 5
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
-  - {fileID: 2119798780}
-  - {fileID: 1676122172}
-  - {fileID: 25182634}
+  - {fileID: 2119798778}
+  - {fileID: 1676122170}
+  - {fileID: 25182632}
 --- !u!114 &1520322205 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1535688795082491468, guid: 4e2f9772315d326498b2b9d98429c9a8,
@@ -41175,7 +41196,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 48753356}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1676122172
+--- !u!114 &1676122170
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -52317,7 +52338,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 48753356}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2111272098
+--- !u!114 &2111272095
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -52344,7 +52365,7 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &2111272099
+--- !u!114 &2111272096
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -52356,8 +52377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 2, z: -7}
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 0, z: -10}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -52472,7 +52493,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 48753356}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2119798780
+--- !u!114 &2119798778
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
